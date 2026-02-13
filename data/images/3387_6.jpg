@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="/favicon.ico">
+<script src="/assets/js/lib/google.tagmanager.js"></script>
+<link rel="stylesheet" type="text/css" href="/assets/css/eyemark.css?<?php echo date('YmdHis');?>" media="all">    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ページが見つかりません 404 Not Found | 小松ウオール工業</title>
+    <meta name="description" content="「パーティションで快適空間を」可動間仕切、ランニングウオール（大型移動壁）、OA対応間仕切、クリーンルーム間仕切など幅広い商品を取り扱っています。">
+    <meta name="keywords" content="パーティション,移動間仕切,可動間仕切,学校間仕切,オフィス,病院,学校,工場,ブース,環境">
+    <meta property="og:title" content="ページが見つかりません | 小松ウオール工業">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.komatsuwall.co.jp/">
+    <meta property="og:description" content="「パーティションで快適空間を」可動間仕切、ランニングウオール（大型移動壁）、OA対応間仕切、クリーンルーム間仕切など幅広い商品を取り扱っています。">
+    <link rel="stylesheet" href="/assets/css/common.css?20260212180755" media="all">
+    <link rel="stylesheet" href="/assets/css/contact.css?20260212180755" media="all">
+</head>
+
+<body id="pagetop" style="opacity: 0;">
+    <header class="l-header">
+    <div class="l-header-inner">
+        <h1 class="l-header-logo">
+            <a href="/">
+                <img src="/common/images/logo_header.svg" alt="">
+            </a>
+        </h1>
+        <nav class="l-header-nav">
+            <ul class="l-header-menu">
+                <li class="l-header-menu-item" id="news"><a href="/news/index.html" class="l-header-menu-link ">お知らせ</a>
+                </li>
+                <li class="l-header-menu-item" id="catalog"><a href="/catalog/index.html"
+                        class="l-header-menu-link ">カタログ/CAD・BIM</a></li>
+                <li class="l-header-menu-item l-header-submenu-parent l-header-accordion jsHeaderAccordion" id="product">
+                    <a href="/product/index.html" class="l-header-menu-link l-header-accordionBtn jsHeaderAccordionBtn">製品情報</a>
+                    <div class="l-header-submenu-container l-header-accordion-container">
+                        <ul class="l-header-submenu-list" style="--rows: 3;">
+                            <li class="sp-only">
+                                <a href="/product/movable/index.html">製品情報</a>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/move/index.html">移動間仕切</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/move/index.html">移動間仕切</a></li>
+                                        <li><a href="/product/move/running/index.html">小松ランニング</a></li>
+                                        <li><a href="/product/move/lightlywall/index.html">ライトリーウォール</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/movable/index.html">可動間仕切</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/movable/index.html">可動間仕切</a></li>
+                                        <li><a href="/product/movable/steel/mighty70-80/index.html">マイティ-70・80</a></li>
+                                        <li><a href="/product/movable/steel/mighty-act-hg/index.html">マイティ-ACT・HG</a></li>
+                                        <li><a href="/product/movable/steel/mighty-70st-u/index.html">ウルトラスタンドウォールDX</a></li>
+                                        <li><a href="/product/movable/steel/mighty-70st/index.html">ウルトラスタンドウォールST</a></li>
+                                        <li><a href="/product/movable/steel/mighty110-130/index.html">マイティ-110・130</a></li>
+                                        <li><a href="/product/movable/steel/mighty50/index.html">マイティ-50</a></li>
+
+                                        <li><a href="/product/movable/glass/mighty-smartrail/index.html">マイティスマートレール</a></li>
+                                        <li><a href="/product/movable/glass/mighty-80wg/index.html">マイティ-80WG</a></li>
+                                        <li><a href="/product/movable/glass/mighty-gwall/index.html">マイティ-GWALL</a></li>
+                                        <li><a href="/product/movable/glass/mighty-gframe-pls/index.html">マイティ-GFRAME・PLS</a></li>
+                                        <li><a href="/product/movable/aluminum/knack50/index.html">ナック-50SW</a></li>
+                                        <li><a href="/product/movable/ceiling/mighty-manufact/index.html">マニファクト</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/school/index.html">学校用間仕切</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/school/index.html">学校用間仕切</a></li>
+                                        <li><a href="/product/school/mighty-lux80sp/index.html">マイティ-Lux80SP</a></li>
+                                        <li><a href="/product/school/mighty-luxs80/index.html">マイティ-Lux・S80</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/lightweight/index.html">鋼製軽量ドア</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/lightweight/index.html">鋼製軽量ドア</a></li>
+                                        <li><a href="/product/lightweight/barrier-free/calmdoor/index.html">カームドア</a></li>
+                                        <li><a href="/product/lightweight/barrier-free/lsdoor-glide/index.html">LSドア-グライド</a></li>
+                                        <li><a href="/product/lightweight/barrier-free/lsdoor-fold/index.html">LSドア-折り戸</a></li>
+                                        <li><a href="/product/lightweight/eazycatchdoor/eazycatchdoor/index.html">イージーキャッチドア</a></li>
+                                        <li><a href="/product/lightweight/normal/lsdoor/index.html">LSドア</a></li>
+                                        <li><a href="/product/lightweight/fire-prevention/calm-fireproof/index.html">カームドア LA・LB/FA・FB</a></li>
+                                        <li><a href="/product/lightweight/fire-prevention/lsdoor-fireproof/index.html">LSドアLA・LB/FA・FB</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/interior/index.html">内装金属工事</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/interior/index.html">内装金属工事</a></li>
+                                        <li><a href="/product/interior/actwall/index.html">アクトウォール</a></li>
+                                        <li><a href="/product/interior/open-shut-wall/index.html">オープンシャットウォール </a></li>
+                                        <li><a href="/product/interior/surfacewall/index.html">サーフィスウォール</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/furniture/index.html">ローパーティション</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/furniture/index.html">ローパーティション</a></li>
+                                        <li><a href="/product/furniture/molsystem/index.html">モールシステム</a></li>
+                                        <li><a href="/product/furniture/surround/index.html">SURROUNDパネル</a></li>
+                                        <li><a href="/product/furniture/atrium/index.html">アトリウム</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion" style=" grid-column: 7/8;">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/toiletbooth/index.html">トイレブース</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/toiletbooth/index.html">トイレブース</a></li>
+                                        <li><a href="/product/toiletbooth/normal/sanity/index.html">サニティ</a></li>
+                                        <li><a href="/product/toiletbooth/normal/showerbooth/index.html">シャワーブース</a></li>
+                                        <li><a href="/product/toiletbooth/door/sanity-slide/index.html">サニティ-ワフードドア</a></li>
+                                        <li><a href="/product/toiletbooth/door/sanity-calm/index.html">サニティ-カームドア</a></li>
+                                        <li><a href="/product/toiletbooth/door/sanity-folding/index.html">サニティ-折り戸</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="l-header-submenu-parent--sub jsHeaderAccordion l-header-accordion" style="grid-row: 2/3; grid-column: 7/8;">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/product/other/index.html">その他</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/product/other/index.html">その他</a></li>
+                                        <li class="first-item last-item"><a href="/product/other/corocoro/index.html">corocoro</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="l-header-menu-item" id="case"><a href="/case/index.html" class="l-header-menu-link ">事例紹介</a>
+                </li>
+                <li class="l-header-menu-item" id="recruit"><a href="/recruit/index.html" target="_blank"
+                        rel="noreferrer" class="l-header-menu-link">採用情報</a></li>
+
+                <li class="l-header-menu-item l-header-submenu-parent l-header-accordion jsHeaderAccordion" id="ir">
+                    <a href="/ir/index.html" class="l-header-menu-link l-header-accordionBtn jsHeaderAccordionBtn ">投資家情報</a>
+                    <div class="l-header-submenu-container l-header-accordion-container">
+                        <ul class="l-header-submenu-list" style="row-gap: min(2%, 2em);">
+                            <li class="sp-only">
+                                <a href="/ir/index.html">投資家情報</a>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/ir/policy/index.html">経営方針</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/ir/policy/index.html">経営方針</a></li>
+                                        <li><a href="/ir/policy/message/index.html">メッセージ</a></li>
+                                        <li><a href="/ir/policy/plan/index.html">中期経営計画</a></li>
+                                        <li><a href="/ir/policy/progress/index.html">中期経営計画進捗</a></li>
+                                        <li><a href="/ir/policy/cost/index.html">資本コスト経営</a></li>
+                                        <li><a href="/ir/policy/risk/index.html">事業等のリスク</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/ir/library/index.html">IRライブラリ</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/ir/library/index.html">IRライブラリ</a></li>
+                                        <li><a href="/ir/library/settlement/index.html">決算短信</a></li>
+                                        <li><a href="/ir/library/briefing/index.html">説明会資料・動画</a></li>
+                                        <li><a href="/ir/library/press/index.html">適時開示書類</a></li>
+                                        <li><a href="/ir/library/annual-report/index.html">有価証券報告書等</a></li>
+                                        <li><a href="/ir/library/business-report/index.html">株主通信</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/ir/financial/index.html">業績・財務</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/ir/financial/index.html">業績・財務</a></li>
+                                        <li><a href="/ir/financial/results/index.html">最新の決算</a></li>
+                                        <li><a href="/ir/financial/highlight/index.html">業績ハイライト</a></li>
+                                        <li><a href="/ir/financial/position/index.html">財政状況</a></li>
+                                        <li><a href="/ir/financial/cashflow/index.html">キャッシュ・フローの状況</a></li>
+                                        <li><a href="/ir/financial/item/index.html">品目別売上高</a></li>
+                                        <li><a href="/ir/financial/data/index.html">財務データダウンロード</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/ir/stock/index.html">株式情報</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/ir/stock/index.html">株式情報</a></li>
+                                        <li><a href="/ir/stock/quotations/index.html">株価情報</a></li>
+                                        <li><a href="/ir/stock/meeting/index.html">株主総会情報</a></li>
+                                        <li><a href="/ir/stock/status/index.html">株式の状況</a></li>
+                                        <li><a href="/ir/stock/dividend/index.html">配当情報</a></li>
+                                        <li><a href="/ir/stock/ratings/index.html">社債・格付情報</a></li>
+                                        <li><a href="/ir/stock/articles/index.html">定款</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/ir/investor/index.html">個人投資家のみなさまへ</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/ir/investor/index.html">個人投資家のみなさまへ</a></li>
+                                        <li><a href="/ir/investor/overview/index.html">一目でわかる小松ウオール</a></li>
+                                        <li><a href="/ir/financial/results/index.html">最新の決算</a></li>
+                                        <li><a href="/ir/policy/plan/index.html">中期経営計画</a></li>
+                                        <li><a href="/ir/stock/dividend/index.html">配当情報</a></li>
+                                        <li><a href="/ir/faq/index.html">よくあるご質問</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <a href="/sustainability/index.html">サステナビリティ</a>
+                            </li>
+                            <li>
+                                <a href="/ir/calendar/index.html">IRカレンダー</a>
+                            </li>
+                            <li>
+                                <a href="/ir/e-publicnotice/index.html">電子公告</a>
+                            </li>
+                            <li>
+                                <a  href="/ir/faq/index.html">よくあるご質問</a>
+                            </li>
+                            <li>
+                                <a  href="/form/form.php?form_id=201">IRに関するお問い合わせ</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="l-header-menu-item l-header-submenu-parent l-header-accordion jsHeaderAccordion" id="sustainability" style="--columns: 5;">
+                    <a href="/sustainability/index.html" class="l-header-menu-link l-header-accordionBtn jsHeaderAccordionBtn ">サステナビリティ</a>
+                    <div class="l-header-submenu-container l-header-accordion-container">
+                        <ul class="l-header-submenu-list">
+                            <li class="sp-only">
+                                <a href="/sustainability/index.html">サステナビリティ</a>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/sustainability/policy/index.html">サステナビリティマネジメント</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/sustainability/policy/index.html">サステナビリティマネジメント</a></li>
+                                        <li><a href="/sustainability/policy/interview/index.html">トップインタビュー</a></li>
+                                        <li><a href="/sustainability/policy/about/index.html">小松ウオールのサステナビリティ</a></li>
+                                        <li><a href="/sustainability/policy/system/index.html">サステナビリティ推進体制</a></li>
+                                        <li><a href="/sustainability/policy/materiality/index.html">マテリアリティ</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/sustainability/environment/index.html">E（環境）</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/sustainability/environment/index.html">E（環境）</a></li>
+                                        <li><a href="/sustainability/environment/policy/index.html">環境方針</a></li>
+                                        <li><a href="/sustainability/environment/management/index.html">環境マネジメント</a></li>
+                                        <li><a href="/sustainability/environment/climate/index.html">気候変動</a></li>
+                                        <li><a href="/sustainability/environment/resource/index.html">資源循環</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/sustainability/society/index.html">S（社会）</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/sustainability/society/index.html">S（社会）</a></li>
+                                        <li><a href="/sustainability/society/human-right/index.html">人権の尊重・労働慣行</a></li>
+                                        <li><a href="/sustainability/society/health/index.html">健康経営</a></li>
+                                        <li><a href="/sustainability/society/space-value/index.html">空間価値創造</a></li>
+                                        <li><a href="/sustainability/society/fair-practice/index.html">公正な事業慣行</a></li>
+                                        <li><a href="/sustainability/society/community/index.html">地域社会とのつながり</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="jsHeaderAccordion l-header-accordion row-full">
+                                <a class="jsHeaderAccordionBtn l-header-accordionBtn" href="/sustainability/governance/index.html">G（ガバナンス）</a>
+                                <div class="l-header-accordion-container">
+                                    <ul class="l-header-submenu-list--sub">
+                                        <li class="sp-only"><a href="/sustainability/governance/index.html">G（ガバナンス）</a></li>
+                                        <li><a href="/sustainability/governance/corporate/index.html">コーポレート・ガバナンス</a></li>
+                                        <li><a href="/sustainability/governance/internal-control/index.html">内部統制</a></li>
+                                        <li><a href="/sustainability/governance/compliance/index.html">コンプライアンス</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <!-- <li>
+                                <a href="/sustainability/policy/index.html">サステナビリティマネジメント</a>
+                            </li> -->
+                            <!-- <li>
+                                <a href="/sustainability/environment/index.html">E（環境）</a>
+                            </li> -->
+                            <!-- <li>
+                                <a href="/sustainability/society/index.html">S（社会）</a>
+                            </li> -->
+                            <!-- <li>
+                                <a href="/sustainability/governance/index.html">G（ガバナンス）</a>
+                            </li> -->
+                            <li>
+                                <a href="/sustainability/sps/index.html">Sustainable Product Standard</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li class="l-header-menu-item"><a href="/contact/inquiry/index.html" class="l-header-menu-link sp-only">お問い合わせ</a></li>
+
+                <li class="l-header-menu-item l-btn-login">
+                    <span href="" class="l-header-menu-link jsModalOpen"><span>ログイン</span></span>
+                    <div class="login-menu">
+                        <ul>
+                            <li class="revise c-arrow-link white" id="edit">会員情報変更</li>
+                            <li class="logout c-arrow-link white" id="logout">ログアウト</li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="l-header-utility">
+                <div class="l-header-search">
+                    <form name="Search" id="Search" method="GET" action="/search/">
+                        <div class="l-search-container">
+                            <input id="siteSearch" name="searchType" type="radio" value="site" checked="checked">
+                            <label class="site" for="siteSearch">サイト内検索</label>
+                            <input id="cadSearch" name="searchType" type="radio" value="cad">
+                            <label for="cadSearch">CAD・BIMデータ</label>
+                            <label class="cad" for="textfield"></label>
+                            <input type="text" name="q" id="textfield" class="l-searchBox" onkeydown="keydownSearch();"
+                                placeholder="検索キーワード入力">
+                            <button onclick="doSearch();document.Search.submit();return false;"
+                                class="l-btn-search--enter">
+                                <svg viewBox="0 0 20 17" fill="none">
+                                <path d="M11.5 0L10.1 1.4L16.1 7.5H0V9.5H16.2L10.2 15.6L11.6 17L20 8.5L11.5 0Z" fill="#2F50A2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                    <span class="l-btn-search--trigger trigger" id="searchToggle">
+                        <svg width="15" height="14" viewBox="0 0 16 15" fill="none">
+                        <path d="M6.72852 0.954102C9.91765 0.954102 12.5035 3.53947 12.5039 6.72852C12.5039 8.15463 11.9857 9.4592 11.1289 10.4668L14.8926 14.1016C15.0911 14.2933 15.0968 14.6099 14.9053 14.8086C14.7135 15.0071 14.3968 15.013 14.1982 14.8213L10.418 11.1709C9.41726 12.0029 8.13148 12.5039 6.72852 12.5039C3.53947 12.5035 0.954102 9.91765 0.954102 6.72852C0.954477 3.5397 3.5397 0.954477 6.72852 0.954102ZM6.72852 1.9541C4.09198 1.95448 1.95448 4.09198 1.9541 6.72852C1.9541 9.36537 4.09175 11.5035 6.72852 11.5039C8.02743 11.5039 9.20446 10.9842 10.0654 10.1426C10.0667 10.1412 10.0681 10.14 10.0693 10.1387C10.0735 10.1344 10.0788 10.1311 10.083 10.127C10.9602 9.26107 11.5039 8.05823 11.5039 6.72852C11.5035 4.09175 9.36537 1.9541 6.72852 1.9541Z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                </div>
+
+                <a href="/contact/inquiry/index.html" class="l-header-contactBtn">
+                    <svg width="14" height="10" viewBox="0 0 15 11" fill="none" class="icon">
+                    <path d="M12.5791 0.000366211C13.9033 0.000366211 14.9911 1.0574 14.9912 2.37927V8.62048C14.9912 9.94247 13.9034 11.0004 12.5791 11.0004H2.4209C1.09661 11.0004 0.00878906 9.94247 0.00878906 8.62048V2.37927C0.00892207 1.0574 1.09669 0.000366211 2.4209 0.000366211H12.5791ZM2.4209 0.974976C1.61942 0.974976 0.983532 1.61169 0.983398 2.37927V8.62048C0.983398 9.38817 1.61933 10.0248 2.4209 10.0248H12.5791C13.3807 10.0248 14.0166 9.38817 14.0166 8.62048V2.37927C14.0165 1.61169 13.3806 0.974976 12.5791 0.974976H2.4209ZM12.2705 2.02771C12.4646 1.84136 12.7734 1.8476 12.96 2.04138C13.1464 2.23556 13.1403 2.54431 12.9463 2.73083L10.0225 5.53748L12.9473 8.35681C13.1411 8.54364 13.1467 8.85238 12.96 9.04626C12.7731 9.24013 12.4644 9.24584 12.2705 9.05896L9.31836 6.21326L7.81738 7.65564C7.62865 7.83669 7.33021 7.83678 7.1416 7.65564L5.66113 6.23083L2.71875 9.05994C2.52464 9.24633 2.21586 9.24019 2.0293 9.04626C1.84278 8.85216 1.84899 8.54341 2.04297 8.35681L4.95801 5.55505L2.02246 2.73083C1.82882 2.54421 1.82251 2.23536 2.00879 2.04138C2.19533 1.84748 2.50415 1.8415 2.69824 2.02771L7.47949 6.62732L12.2705 2.02771Z" fill="currentColor"/>
+                    </svg>
+                </a>
+            </div>
+
+        </nav>
+    </div>
+    <div class="l-header-menu-btn"><span></span></div>
+    <div class="l-login-area jsModalClose jsModalArea" style="display: none;">
+        <div class="l-login-box login">
+            <span class="c-close-btn jsModalClose"></span>
+            <h5>ログイン</h5>
+            <form action="" method="POST" name="login" id="form_login_common" class="l-form-login">
+                <input type="hidden" name="act" value="login">
+
+                <p class="txt-error" id="login_error_1_common" style="display:none;">ログインIDもしくはパスワードが正しくありません。</p>
+                <p class="txt-error" id="login_error_2_common" style="display:none;">登録は完了していません。会員登録メールをご確認ください。</p>
+                <dl class="l-form-item">
+                    <dt>ログインID</dt>
+                    <dd>
+                        <input name="login_id_common" value="" type="search">
+                        <p style="font-size:80%;">※会員登録時に入力したメールアドレスです。</p>
+                    </dd>
+                </dl>
+                <dl class="l-form-item">
+                    <dt>パスワード</dt>
+                    <dd>
+                        <div class="form-pass1_wrap">
+                            <input name="login_pswd_common" value="" type="password">
+                            <div class="password_btn_lg" id="eyemark">
+                                <img src="/common/images/eye-solid.svg" aly="パスワードの表示">
+                            </div>
+                        </div>
+                    </dd>
+                </dl>
+
+                <div class="login-btn-area">
+                    <a href="/member/reminder/" class="c-arrow-link white mt-40" id="reminder">パスワードを忘れた方はこちら</a>
+                    <a href="/member/" class="c-arrow-link white" id="new_member">新規会員登録はこちら</a>
+                    <button type="button" class="c-btn big white" id="login_common">ログインする</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</header>
+
+    <div class="l-pagebody company">
+        <div class="page-inner">
+            <div class="l-page-top">
+                <h2 class="l-page-ttl has-sub-ttl">
+                    <span class="l-page-ttl__sub">404 Not Found</span>
+                    <span class="main narrow">ページが見つかりません</span>
+                </h2>
+            </div>
+            <section class="l-page-sec">
+                <div class="l-page-inner">
+                    <h3 class="c-ttl-m">大変申し訳ございません。<br>お探しのページまたはファイルは見つかりませんでした。</h3>
+                    <p>URLを正しく入力してもページが表示されない場合は、当サイトのリニューアルに伴いURLが変更になったか、<br class="only-pc">削除された可能性がございます。</p>
+                    <p>ブックマークに登録されている場合は、お手数ですが設定の変更をお願いいたします。</p>
+                </div>
+                <div class="l-page-partition jsParallax jsAnime partitionR">
+                    <figure class="partition-inner"><img src="/contact/images/img_partition.jpg" alt="" class="partition-image "></figure>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <div id="pageTop" class="hidden"><a href="#pagetop"></a></div>
+
+    <footer class="l-page-footer color">
+        
+  <div class="l-footer-inner">
+    <div class="l-footer-top">
+      <a href="/" class="l-footer-logo">
+        <svg id="logo-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 987.301 59.05">
+          <path d="M-14941.558,5439.009l12.309-34.729-22.459-.019v15.53l-21.781.057V5398.09a5.334,5.334,0,0,1,5.33-5.33l17.9.031v-1.9a10.793,10.793,0,0,1,10.8-10.8,10.8,10.8,0,0,1,10.8,10.8v1.929l12.182.023-.019.007a9.63,9.63,0,0,1,9.63,9.63,9.594,9.594,0,0,1-.5,3.049l-11.892,33.523Zm-303.443.042,21.23-58.851h22.719l-5.608,15.541a29.462,29.462,0,0,1,26.089-15.74,29.506,29.506,0,0,1,28.853,23.35,18.97,18.97,0,0,0-17.933-12.821,18.963,18.963,0,0,0-18.958,18.969,18.957,18.957,0,0,0,18.958,18.961,18.953,18.953,0,0,0,17.9-12.733,29.5,29.5,0,0,1-28.828,23.262,29.493,29.493,0,0,1-29.491-29.491,29.2,29.2,0,0,1,.62-6.042l-12.841,35.593Zm949.653-.011V5428h9.657V5399.95h-6.21v-11.038h6.232a9.155,9.155,0,0,1,9.148-8.911,9.14,9.14,0,0,1,9.14,8.911h6.229v11.027h-6.209V5428h9.66v11.042Zm-24.241,0v-18.529h-5.211l-5.9-9.752h13.763s3.08,0,3.08-2.938v-7.87h-16.173v-11.038h10.392a9.163,9.163,0,0,1,9.147-8.911,9.134,9.134,0,0,1,9.133,8.911h5.957v21.047a5.007,5.007,0,0,1-1.186,3.52,5.436,5.436,0,0,1,4.629,5.5c0,4.87-4.882,5.429-5.532,5.429h-3.627v14.631Zm-161.449-11.371,7.809-1.76v-9.229h-7.679v-11.042h37.338v11.042h-7.87v4.3l8.073-1.833v11.042l-37.671,8.85Zm-33.13,11.371v-8.991l-1.89,4.461h-11.681l3.321-7.828h-7.92v12.358h-19.444v-12.358h-8.738l8.712-26.8h-7.04v-10.912h7.14a9.692,9.692,0,0,1,9.66-8.968,9.7,9.7,0,0,1,9.661,8.968h4.587v8.911l5.7-13.72v.02a5.148,5.148,0,0,1,4.79-3.268,5.149,5.149,0,0,1,4.549,2.77,8.229,8.229,0,0,1,6.86-3.681,8.241,8.241,0,0,1,8.241,8.237v.842h7.288v11.03h-7.27v5.417h10.709v11.031h-4.748l7.61,17.963h-11.681l-1.9-4.473v8.991Zm-9.76-13.491h.008l3.811-8.991h-4.74v-11.031h10.713v-5.417h-3.184l-1.477,3.608-11.413-.019,1.58-3.811h-3.657Zm-189.521,13.491v-11.03h25.37l3.849-12.53a11.438,11.438,0,0,1-6.289-2.858,5.85,5.85,0,0,1-1.722-3.933,10.525,10.525,0,0,1,.569-2.858l3.712-12.332h-21.549v-11.03h63.527v11.03h-20.179l-3.8,12.7a10.144,10.144,0,0,1,6.581,3.348,5.66,5.66,0,0,1,1.01,5.479v.012l-3.922,12.97h24.241v11.03Zm-395.083,0-5.368-11.57h9.711V5390.89A10.893,10.893,0,0,1-15093.3,5380a10.874,10.874,0,0,1,10.881,10.889v37.46c0,4.779-2.942,10.69-7.87,10.69Zm763.373-.012h-48.422c-5.05,0-6.99-.75-8.758-2.449-1.522-1.461-2.341-5.528.738-8.5,3.08-2.958,7.641-7.538,7.641-7.538h-12.48v-9.752h71.691v9.752h-12.579l6.179,5.311a7.512,7.512,0,0,1,1.9,9.519,7.106,7.106,0,0,1-5.9,3.658Zm-33.45-10.95h18.7a7.269,7.269,0,0,1,1.339-7.538h-12.4Zm-50.159,10.95c-4.561,0-5.973-1.89-8.359-10.487l-8.043-30.122h.482l-.042-.031h-36.079v-10.969h32.471a10.25,10.25,0,0,1,9.849-7.418,10.257,10.257,0,0,1,9.852,7.418h5.1c-.012-.13-.023-.26-.023-.4a7.016,7.016,0,0,1,7.021-7.021,7.016,7.016,0,0,1,7.021,7.021c0,8.268-1.141,11.39-1.141,11.39h-14.719l7.17,26.839a3.423,3.423,0,0,0,3.31,2.541h6.669l-4.921,11.237Zm-315.561-.038c-4.932,0-7.869-5.911-7.869-10.69l.057-37.961A10.343,10.343,0,0,1-14741.8,5380a10.339,10.339,0,0,1,10.338,10.338v35.36h11.283l-4.89,13.33Zm-48.279.038,16.019-52.42a10.351,10.351,0,0,1,9.638-6.607,10.345,10.345,0,0,1,10.342,10.33,10.4,10.4,0,0,1-.421,2.919l-13.911,45.778Zm-108.149-.019,10.438-29.479h-10.3v-11.1h36.58a10.441,10.441,0,0,1,9.8-6.871h.031a10.431,10.431,0,0,1,9.8,6.871h8.269v11.1h-8.237v18.4c0,5.973-3.524,11.092-7.852,11.092h-15.38l-4.859-11.172h8.218v-18.331h-8.13l-10.448,29.51Zm-115.182.019a7.25,7.25,0,0,1-7.25-7.25,7.19,7.19,0,0,1,.439-2.46l1.929-4.648h-4.029v14.359h-19.439v-14.359h-5.911l5.911-24.9h-5.789v-11.03h5.877a9.681,9.681,0,0,1,9.642-8.739,9.682,9.682,0,0,1,9.642,8.75h5.88v11.019h-5.812l5.238,22,4.293-10.311a7.237,7.237,0,0,1,6.867-4.947,7.248,7.248,0,0,1,7.25,7.25,7.235,7.235,0,0,1-.459,2.518l-4.6,11.271,10.988-.019-3.39-8.352a7.129,7.129,0,0,1-.54-2.739,7.251,7.251,0,0,1,7.251-7.25,7.24,7.24,0,0,1,6.741,4.61v-.011l6.29,15.273a7.232,7.232,0,0,1,.527,2.717,7.246,7.246,0,0,1-7.25,7.25Zm433.48-.007-7.021-12.522v12.522h-21.85v-12.672l-7.113,12.672h-17.978l7.679-13.5h-7.587v-7.928h25.006v-1.951h-22.079V5407.7h22.079v-1.84h-25.006v-5.991h10.46l-1.611-2.969h-8.849v-7.931h6.867l-.1-.161a5.708,5.708,0,0,1,1.722-7.9,5.711,5.711,0,0,1,7.9,1.718l4.082,6.34h.559v-1.99a6.981,6.981,0,0,1,6.982-6.979,7,7,0,0,1,6.99,6.979v1.99h2.169v-1.99a6.986,6.986,0,0,1,6.979-6.979,6.985,6.985,0,0,1,6.979,6.979v1.99h.551l4.083-6.34a5.7,5.7,0,0,1,7.9-1.718,5.7,5.7,0,0,1,1.722,7.9h-.019l-.1.161h6.588v7.931h-8.85l-1.61,2.969h10.46v5.991h-25.011v1.84h22.08v7.939h-22.08v1.951h25.011v7.928h-7.679l7.679,13.5Zm-24.941-39.14h14.03l1.61-2.969h-17.251Zm-468.619,25.018v-26.288a9.248,9.248,0,0,1,9.248-9.251l-.008-.008a9.247,9.247,0,0,1,9.247,9.248v26.3Zm-53.831-.007V5398.6a9.248,9.248,0,0,1,9.251-9.248,9.25,9.25,0,0,1,9.251,9.248h-.011v26.292Zm-36.32-2.992-3.348-16.677-3.352,16.677h-4.163l-6.079-21.441h4.752l3.451,15.7,3.037-15.7h4.733l3.2,15.7,3.52-15.7h4.562l-6.042,21.441Zm336.7-5.15v-14.458h35.961v14.458Zm-322.263-1.109h.012a.755.755,0,0,1-.031.088A.69.69,0,0,0-15151.73,5415.64Zm753.472-6.749v-8.979h-8.241l25.183-17.06s3.6-2.851,10.72-2.851,10.7,2.851,10.7,2.851l25.183,17.06h-8.241v8.979Zm36.029-9.752-8.44-6.148-8.3,6.148Zm-632.02,6.313-5.081-10.1-5.089,10.1h-17.289l7.87-15.622h11.727l-.868-1.729h-2.92a4.049,4.049,0,0,1-4.052-4.052,4.048,4.048,0,0,1,4.052-4.048h11.608a7.229,7.229,0,0,1,6.32,3.719v-.011l11.012,21.743Zm-188.87-4.993h.008Z" transform="translate(15245.001 -5380.001)"/>
+          </svg>
+        <!-- <svg id="logo-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 334 20">
+          <g><path class="cls-1" d="M87.18,2.83c-.7-1.38-1.16-2.71-2.98-2.71h-3.87c-.75,0-1.36,.61-1.36,1.36s.61,1.36,1.36,1.36h1l.29,.58h-3.94l-2.64,5.25h5.81l1.71-3.4,1.71,3.4h5.81l-2.94-5.83h.03Zm52.46,3.16h12.08v4.04h-12.08V5.99Zm147.14,3.83h18.14v-3.02h3.3l-7.49-5.03c-1.27-1.15-2.94-1.75-4.65-1.69-1.7-.04-3.35,.56-4.62,1.69l-7.44,5.03h2.77v3.02Zm9.3-5.34l2.84,2.07h-5.63l2.79-2.07ZM38.72,15.2h6.2V6.92c0-.05,0-.1,0-.15s0-.1,0-.16v-.07c0-.05,0-.1,0-.15,.03-1.72-1.34-3.14-3.05-3.17-1.72-.03-3.14,1.34-3.17,3.05,0,.04,0,.07,0,.11,0,.05,0,.1,0,.15v.07c0,.05,0,.1,0,.16s0,.1,0,.15c0,0,0,8.28,0,8.28ZM63.01,6.39c.03-1.72-1.34-3.14-3.05-3.17-1.72-.03-3.14,1.34-3.17,3.05,0,.04,0,.07,0,.11,0,.05,0,.1,0,.15s0,.1,0,.15,0,.1,0,.15V15.12h6.2V6.84c0-.05,0-.1,0-.15s0-.1,0-.15,0-.1,0-.15m26.31,9.97l-2.04-4.97h-.01c-.52-1.22-1.93-1.79-3.16-1.28-1.23,.52-1.81,1.93-1.32,3.17h-.01l1.15,2.8h-3.69s1.57-3.77,1.57-3.77h-.01c.46-1.26-.17-2.65-1.41-3.13-1.24-.48-2.64,.14-3.12,1.39h-.01s-1.5,3.61-1.5,3.61l-1.75-7.38v-.04h1.95V3.05h-1.96c-.18-1.8-1.79-3.11-3.58-2.93-1.55,.16-2.77,1.38-2.93,2.93h-1.97v3.71h1.95v.04l-1.99,8.34h1.99v4.83h6.53v-4.83h1.37l-.47,1.15c-.33,.6-.39,1.32-.16,1.97,.35,1.04,1.36,1.71,2.46,1.64l9.91-.02c.34,0,.67-.06,.98-.19,1.24-.53,1.82-1.96,1.3-3.2-.01-.04-.04-.07-.05-.11m21.26-11.94h-4.23v-.73h-.03c-.04-2.01-1.7-3.6-3.71-3.57-1.96,.04-3.54,1.62-3.57,3.59h-.02v.71h-.46s-5.33,.01-5.33,.01c-1.84,.02-1.99,1.31-1.99,2.36v6.71l7.32-.02v-5.22h7.55s-4.14,11.68-4.14,11.68l7.51-.02,4.15-11.72h-.02c.32-1.73-.82-3.4-2.55-3.72-.16-.03-.33-.05-.5-.05m24.03,1.9c-.64-1.82-2.63-2.78-4.45-2.13-1,.35-1.78,1.14-2.13,2.13h-12.3v3.71h3.46l-3.5,9.88h6.02s3.5-9.87,3.5-9.87h2.76v6.16h-2.78l1.65,3.8h5.14c1.34,0,2.64-1.56,2.64-3.73h0v-6.24h2.77v-3.71h-2.78Zm39.69-2.67h-.02c0-1.91-1.54-3.46-3.45-3.47-1.91,0-3.46,1.54-3.47,3.45h-.02V15.47h-.02c-.03,2.96,1.29,4.46,2.64,4.46h6.46l1.65-4.46h-3.79V3.66Zm23.33,8.21c.56-1.78-1.3-2.85-2.55-2.96l1.28-4.26h6.78V.94h-21.34v3.71h7.24l-1.33,4.41c-.58,1.86,1.3,2.79,2.58,2.96l-1.29,4.2h-8.52v3.71h23.99v-3.71h-8.15l1.32-4.35Zm32.9,3.55v-2.66h-8.16v-.67h7.17v-2.67h-7.17v-.62h8.16v-2h-3.12l.54-1h2.57V3.13h-2.01c.57-.91,.3-2.11-.6-2.69-.9-.57-2.08-.3-2.65,.59,0,0,0,.01-.01,.02v.03s-1.29,2.05-1.29,2.05h-.13v-.75h-.02c-.01-1.29-1.06-2.32-2.35-2.31-1.29,.01-2.32,1.06-2.31,2.35h-.01v.71h-.77v-.75h-.01c-.04-1.29-1.11-2.3-2.39-2.26-1.25,.03-2.25,1.05-2.26,2.31h-.01v.71h-.07l-1.27-2.05s-.01-.02-.02-.03c-.56-.9-1.74-1.18-2.64-.62,0,0-.01,0-.02,.01-.9,.58-1.18,1.77-.61,2.68h-2.68v2.67h3.38l.54,1h-3.92v2h8.66v.63h-7.67v2.67h7.68v.67h-8.67v2.66h2.54l-2.51,4.47h6.01s2.52-4.47,2.52-4.47h.11v4.5h7.32v-4.5s.07,0,.07,0l2.5,4.49h5.68s-2.49-4.49-2.49-4.49h2.4Zm-9.32-8.63h-4.71l-.54-1h5.79l-.54,1Zm34.79,5.61v-3.71h-3.6v-1.82h2.44V3.16h-2.44v-.09s0-.09,0-.13c.01-1.53-1.22-2.79-2.75-2.8-.93,0-1.8,.45-2.33,1.22-.44-.85-1.48-1.18-2.33-.74-.39,.2-.68,.54-.83,.94h0s-1.98,4.73-1.98,4.73V3.27h-1.55s0-.1,0-.14c0-1.62-1.31-2.93-2.93-2.93s-2.93,1.31-2.93,2.93c0,.05,0,.1,0,.14h-3.04v3.52h3.04v.2s-3.09,8.91-3.09,8.91h3.09v4h5.84v-4.11h2.77l-1.12,2.64h3.93l.64-1.5v2.97h5.55v-2.83l.6,1.41h3.93l-2.57-6.08h1.64Zm-9.15-3.71h-3.6v3.71h1.59l-1.28,3.02-2.93-8.53v-.1h1.34l-.52,1.28h3.83s.5-1.21,.5-1.21h1.07v1.82Zm33.41,7.49c-.79,0-1.03-.34-1.28-1.26l-2.3-8.62h4.95c.3-1.23,.41-2.49,.35-3.75,.06-1.23-.89-2.27-2.12-2.33-.08,0-.16,0-.24,0-1.29,.01-2.32,1.07-2.31,2.36,0,0,0,0,0,.01h0s-1.73,0-1.73,0c-.64-1.82-2.63-2.78-4.45-2.14-1,.35-1.78,1.14-2.14,2.14h-10.94v3.71h11.98s2.68,10,2.68,10c.62,2.36,1.28,3.57,2.61,3.57h5.47l1.65-3.71s-1.39,0-2.18,0m-12.34-3.74h2.64v-3.71h-12.54v3.71h2.58v3.1l-2.62,.59v3.71l12.66-2.86v-3.71l-2.71,.61v-1.45Zm16.24,1.3h4.06l-2.57,2.54h-.01c-1.04,1-1.45,3.77,2.65,3.71h15.92c.82,.08,1.62-.25,2.14-.88,.88-1.06,.74-2.62-.31-3.51-.03-.02-.05-.04-.08-.06h0s-2.08-1.8-2.08-1.8h4.36v-3.28h-24.09v3.28Zm11.79,0h4.16s-.03,.03-.04,.04c-.58,.7-.73,1.65-.41,2.49h-6.28l2.57-2.54Zm34.84,2.45V6.81h2.06V3.1h-2.06c-.03-1.72-1.45-3.08-3.16-3.05-1.67,.03-3.02,1.38-3.05,3.05h-2.06v3.71h2.06v9.38h-3.22v3.71h12.65v-3.71h-3.22Zm-8.29-2.98c.01-.92-.65-1.7-1.55-1.85,.26-.27,.4-.64,.4-1.01v-3.54h.01V3.1h-1.98c-.04-1.71-1.47-3.07-3.18-3.03-1.65,.04-2.98,1.37-3.03,3.03h-3.47v3.71h5.44v2.64c.06,.49-.29,.93-.77,.99-.09,.01-.17,0-.26,0-.72,0-4.62,0-4.62,0l1.98,3.28h1.75v6.17h6.21v-4.86h1.22c1.02,0,1.85-.81,1.86-1.82M50.99,.23c-1.98,0-3.59,1.6-3.63,3.58h-.03v12.22h-3.26l1.8,3.89h6.13c1.33,0,2.62-1.44,2.64-3.73h0V3.79h-.02c-.05-1.97-1.66-3.55-3.63-3.56m112.35,.18c-1.81-.57-3.74,.44-4.32,2.25h-.02s-5.24,17.22-5.24,17.22h7.28l4.59-15.12h-.02c.56-1.83-.46-3.77-2.27-4.35M31.42,12.01c-1.14,5.37-6.41,8.8-11.78,7.67-5.37-1.14-8.8-6.41-7.67-11.78l-4.33,12H0L7.15,.07h7.65l-1.89,5.24C15.47,.45,21.48-1.41,26.34,1.15c2.61,1.38,4.48,3.84,5.09,6.73-1.14-3.34-4.78-5.12-8.12-3.98-3.34,1.14-5.12,4.78-3.98,8.12s4.78,5.12,8.12,3.98c1.87-.64,3.34-2.11,3.98-3.98m-10.58-5.11h1.6l.96,4.14,.2,1.15,.21-1.13,.82-4.16h1.59l.86,4.14,.22,1.15,.22-1.11,.96-4.18h1.53l-2.03,7.23h-1.44l-.87-4.23-.25-1.4-.26,1.4-.87,4.23h-1.4l-2.05-7.22Z"/></g>
+        </svg> -->
+      </a>
+      <nav class="l-footer-nav">
+        <ul class="l-footer-menu">
+          <li class="l-footer-item"><a href="/news/index.html">お知らせ</a></li>
+          <li class="l-footer-item"><a href="/catalog/index.html">カタログ・CAD・BIM</a></li>
+          <li class="l-footer-item"><a href="/product/index.html">製品情報</a></li>
+          <li class="l-footer-item"><a href="/case/index.html">事例紹介</a></li>
+          <li class="l-footer-item"><a href="/recruit/index.html" rel="noreferrer" target="_blank">採用情報</a></li>
+          <li class="l-footer-item"><a href="/ir/index.html">投資家情報</a></li>
+          <li class="l-footer-item"><a href="/sustainability/index.html">サステナビリティ</a></li>
+          <li class="l-footer-item"><a href="/special/index.html">スペシャルコンテンツ</a></li>
+          <li class="l-footer-item"><a href="/company/index.html">企業情報</a></li>
+          <li class="l-footer-item"><a href="/contact/inquiry/index.html">お問い合わせ</a></li>
+        </ul>
+        <ul class="l-footer-menu menu-sub">
+          <li class="l-footer-item"><a href="/contact/sitemap/index.html">サイトマップ</a></li>
+          <li class="l-footer-item"><a href="/contact/privacy/index.html">プライバシーポリシー</a></li>
+          <li class="l-footer-item"><a href="/contact/about/index.html">このサイトについて</a></li>
+          <li class="l-footer-item"><a href="/contact/asbestos/index.html">アスベスト使用状況</a></li>
+        </ul>
+      </nav>
+    </div>
+    <div class="l-footer-bottom">
+      <div class="l-footer-address">
+        <p>〒923-8643 石川県小松市工業団地1-72</p>
+        <p class="tel">TEL:0761-21-3131(代)<span class="fax">FAX:0761-21-3127</span></p>
+      </div>
+      <p class="l-footer-copy">&copy;Komatsu Wall Industry Co., Ltd.</p>
+      
+    </div>
+    <div class="l-page-footer-back"></div>
+  </div>    </footer>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="/assets/js/lib/jquery-3.6.1.min.js"><\/script>');</script>
+<script src="/assets/js/lib/jquery.cookie.js"></script>
+<!-- Inview -->
+<script src="/assets/js/lib/jquery.inview.min.js"></script>
+<!-- Scroll用JS -->
+<script src="/assets/js/lib/gsap.js"></script>
+<script src="/assets/js/lib/ScrollTrigger.js"></script>
+<script src="/cms/js/search.js"></script>
+<script src="/assets/js/common.js?20240329170000"></script>
+<script src="/assets/js/animation.js"></script>
+<script src="/assets/js/eyemark.js" charset="UTF-8"></script>
+
+</body>
+
+</html>

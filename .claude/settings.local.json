@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install:*)",
+      "Bash(python -c:*)",
+      "Bash(python scraper.py:*)",
+      "Bash(python:*)",
+      "Bash(timeout:*)",
+      "Bash(set:*)",
+      "Bash(npx skills find:*)",
+      "Bash(npx skills add:*)",
+      "Bash(streamlit run:*)",
+      "WebFetch(domain:www.apple.com)",
+      "Bash(findstr:*)"
+    ]
+  }
+}
