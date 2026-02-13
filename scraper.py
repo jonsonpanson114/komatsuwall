@@ -118,34 +118,52 @@ def download_images(case: dict) -> list[str]:
     return local_paths
 
 
-def run_scraper(max_pages: int = 5) -> list[dict]:
+def run_scraper(max_pages: int = 1000) -> list[dict]:
     """スクレイピングのメインフロー。"""
     DATA_DIR.mkdir(parents=True, exist_ok=True)
     IMAGES_DIR.mkdir(parents=True, exist_ok=True)
 
+    # 既存データの読み込み (再開用)
+    existing_cases = []
+    scraped_urls = set()
     if RAW_DATA_PATH.exists():
-        print("[Scraper] 既存の raw_data.json を使用します。")
-        with open(RAW_DATA_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+        print("[Scraper] 既存の raw_data.json を読み込みます。")
+        try:
+            with open(RAW_DATA_PATH, "r", encoding="utf-8") as f:
+                existing_cases = json.load(f)
+                for case in existing_cases:
+                    scraped_urls.add(case["url"])
+        except json.JSONDecodeError:
+            print("[Scraper] JSON破損の可能性があります。バックアップを作成して新規作成します。")
+            if RAW_DATA_PATH.stat().st_size > 0:
+                RAW_DATA_PATH.rename(RAW_DATA_PATH.with_suffix(".json.bak"))
 
     detail_links = get_detail_links(max_pages=max_pages)
-    print(f"[Scraper] 合計 {len(detail_links)} 件の詳細ページを処理します。")
+    print(f"[Scraper] 合計 {len(detail_links)} 件のリンクが見つかりました。")
 
-    cases = []
-    for link in detail_links:
+    # 新規リンクのみ抽出
+    new_links = [link for link in detail_links if link not in scraped_urls]
+    print(f"[Scraper] 新規取得対象: {len(new_links)} 件 (スキップ: {len(detail_links) - len(new_links)} 件)")
+
+    cases = existing_cases
+    for i, link in enumerate(new_links):
         case = scrape_detail(link)
         if case:
             local_paths = download_images(case)
             case["local_image_paths"] = local_paths
             cases.append(case)
+            
+            # 1件ごとに保存 (データ保護)
+            with open(RAW_DATA_PATH, "w", encoding="utf-8") as f:
+                json.dump(cases, f, ensure_ascii=False, indent=2)
+            
+            print(f"[Scraper] 進捗: {i + 1}/{len(new_links)} 件完了 (保存済み)")
+        
         time.sleep(1)
 
-    with open(RAW_DATA_PATH, "w", encoding="utf-8") as f:
-        json.dump(cases, f, ensure_ascii=False, indent=2)
-
-    print(f"[Scraper] 完了: {len(cases)} 件を {RAW_DATA_PATH} に保存しました。")
+    print(f"[Scraper] 全完了: {len(cases)} 件を {RAW_DATA_PATH} に保存しました。")
     return cases
 
 
 if __name__ == "__main__":
-    run_scraper()
+    run_scraper(max_pages=1000)

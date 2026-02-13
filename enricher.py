@@ -56,10 +56,18 @@ def run_enricher() -> list[dict]:
     configure_api()
     model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
+    # 既存データの読み込み (再開用)
+    enriched_map = {}
     if ENRICHED_DATA_PATH.exists():
-        print("[Enricher] 既存の enriched_data.json を使用します。")
-        with open(ENRICHED_DATA_PATH, "r", encoding="utf-8") as f:
-            return json.load(f)
+        print("[Enricher] 既存の enriched_data.json を読み込みます。")
+        try:
+            with open(ENRICHED_DATA_PATH, "r", encoding="utf-8") as f:
+                existing_data = json.load(f)
+                for item in existing_data:
+                    enriched_map[item["case_id"]] = item
+        except json.JSONDecodeError:
+            print("[Enricher] JSON破損。バックアップして新規作成します。")
+            ENRICHED_DATA_PATH.rename(ENRICHED_DATA_PATH.with_suffix(".json.bak"))
 
     if not RAW_DATA_PATH.exists():
         raise FileNotFoundError(
@@ -67,36 +75,69 @@ def run_enricher() -> list[dict]:
         )
 
     with open(RAW_DATA_PATH, "r", encoding="utf-8") as f:
-        cases = json.load(f)
+        raw_cases = json.load(f)
 
-    enriched = []
-    for case in cases:
+    print(f"[Enricher] 合計 {len(raw_cases)} 件のデータを処理対象とします。")
+
+    enriched_list = []
+    
+    for i, case in enumerate(raw_cases):
+        case_id = case["case_id"]
+        
+        # 既に処理済みで、画像数も一致しているか確認
+        if case_id in enriched_map:
+            existing_case = enriched_map[case_id]
+            # 画像パスのリストが存在し、処理済みの説明文数と一致すればスキップ
+            raw_img_count = len(case.get("local_image_paths", []))
+            enriched_desc_count = len(existing_case.get("descriptions", []))
+            
+            if raw_img_count == enriched_desc_count:
+                enriched_list.append(existing_case)
+                # print(f"[Enricher] スキップ (完了済み): {case_id}")
+                continue
+        
+        # ここに来たら処理が必要
+        print(f"[Enricher] 処理中 ({i+1}/{len(raw_cases)}): {case['project_name']}")
+        
         case_enriched = {**case, "descriptions": []}
+        
+        # 既存の説明文があれば引き継ぐ (部分的な再開用)
+        existing_descs = {}
+        if case_id in enriched_map:
+             for desc in enriched_map[case_id].get("descriptions", []):
+                 existing_descs[desc["image_path"]] = desc["description"]
+
         for img_path in case.get("local_image_paths", []):
             if not Path(img_path).exists():
                 print(f"[Enricher] 画像が見つかりません: {img_path}")
                 continue
 
-            print(f"[Enricher] 説明文生成中: {img_path}")
-            desc = generate_description(
-                model=model,
-                image_path=img_path,
-                project_name=case.get("project_name", "不明"),
-                products=case.get("products", []),
-                location=case.get("location", "不明"),
-            )
+            # 既にこの画像の生成済みデータがあればそれを使う
+            if img_path in existing_descs:
+                description = existing_descs[img_path]
+            else:
+                print(f"  - 生成中: {Path(img_path).name}")
+                description = generate_description(
+                    model=model,
+                    image_path=img_path,
+                    project_name=case.get("project_name", "不明"),
+                    products=case.get("products", []),
+                    location=case.get("location", "不明"),
+                )
+                time.sleep(2) # レート制限への配慮
+
             case_enriched["descriptions"].append(
-                {"image_path": img_path, "description": desc}
+                {"image_path": img_path, "description": description}
             )
-            time.sleep(1)
+        
+        enriched_list.append(case_enriched)
+        
+        # 1件ごとに保存
+        with open(ENRICHED_DATA_PATH, "w", encoding="utf-8") as f:
+            json.dump(enriched_list, f, ensure_ascii=False, indent=2)
 
-        enriched.append(case_enriched)
-
-    with open(ENRICHED_DATA_PATH, "w", encoding="utf-8") as f:
-        json.dump(enriched, f, ensure_ascii=False, indent=2)
-
-    print(f"[Enricher] 完了: {len(enriched)} 件を {ENRICHED_DATA_PATH} に保存。")
-    return enriched
+    print(f"[Enricher] 全完了: {len(enriched_list)} 件を {ENRICHED_DATA_PATH} に保存しました。")
+    return enriched_list
 
 
 if __name__ == "__main__":

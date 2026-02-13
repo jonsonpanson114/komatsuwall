@@ -4,12 +4,18 @@ Architectural Monograph Design
 """
 
 import base64
+import io
+import json
 from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
+from PIL import Image
 
 load_dotenv()
+
+DATA_DIR = Path(__file__).parent / "data"
+HERO_IMAGE = str(DATA_DIR / "images" / "3460_0.jpg")  # mosaic glass corridor
 
 st.set_page_config(
     page_title="KOMATSU WALL | 空間を、直感で見つける",
@@ -90,40 +96,57 @@ div[data-testid="stStatusWidget"] {{
 @keyframes slideScore {{
     from {{ width: 0; }}
 }}
+@keyframes slowDrift {{
+    0%   {{ transform: scale(1.0); }}
+    50%  {{ transform: scale(1.05); }}
+    100% {{ transform: scale(1.0); }}
+}}
 
 /* ════════════════════════════════════════════════════════
-   HERO — Cinematic dark canvas with film grain
+   HERO — Full-bleed single image, Apple-style
    ════════════════════════════════════════════════════════ */
 .hero {{
-    background: var(--ink);
-    padding: 160px 40px 120px;
+    padding: 180px 40px 140px;
     text-align: center;
     position: relative;
     overflow: hidden;
+    background-color: var(--ink);
 }}
+
+/* Full-bleed background image */
+.hero-bg {{
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 40%;
+    animation: slowDrift 50s ease-in-out infinite;
+}}
+
+/* Cinematic gradient overlay — readable text + visible photo */
+.hero-overlay {{
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+        linear-gradient(to bottom,
+            rgba(8,8,8,0.50) 0%,
+            rgba(8,8,8,0.30) 35%,
+            rgba(8,8,8,0.30) 60%,
+            rgba(8,8,8,0.70) 100%);
+}}
+
 /* Film grain noise overlay */
 .hero::after {{
     content: '';
     position: absolute;
     inset: 0;
+    z-index: 2;
     background-image: url("{NOISE_SVG}");
     background-repeat: repeat;
     background-size: 256px;
-    opacity: 0.035;
+    opacity: 0.03;
     pointer-events: none;
     mix-blend-mode: overlay;
-}}
-/* Warm radial glow */
-.hero::before {{
-    content: '';
-    position: absolute;
-    top: 35%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 1000px;
-    height: 500px;
-    background: radial-gradient(ellipse, rgba(154,123,91,0.07) 0%, transparent 65%);
-    pointer-events: none;
 }}
 
 .hero-overline {{
@@ -135,7 +158,7 @@ div[data-testid="stStatusWidget"] {{
     color: var(--ash);
     margin: 0 0 28px;
     position: relative;
-    z-index: 1;
+    z-index: 5;
     animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
 }}
 
@@ -147,13 +170,14 @@ div[data-testid="stStatusWidget"] {{
     line-height: 1.1;
     margin: 0 0 24px;
     position: relative;
-    z-index: 1;
+    z-index: 5;
     animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
     /* Gradient text — white to warm silver */
     background: linear-gradient(160deg, #ffffff 20%, var(--silk) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+    text-shadow: none;
 }}
 
 .hero-subhead {{
@@ -166,7 +190,7 @@ div[data-testid="stStatusWidget"] {{
     line-height: 1.72;
     letter-spacing: 0.04em;
     position: relative;
-    z-index: 1;
+    z-index: 5;
     animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
 }}
 
@@ -580,6 +604,20 @@ def img_b64(path: str) -> str:
         return ""
 
 
+@st.cache_data
+def hero_img_b64(path: str, width: int = 1600) -> str:
+    """Resize hero image for lightweight base64 embedding."""
+    try:
+        img = Image.open(path)
+        ratio = width / img.width
+        img = img.resize((width, int(img.height * ratio)), Image.LANCZOS)
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=82, optimize=True)
+        return base64.b64encode(buf.getvalue()).decode()
+    except Exception:
+        return ""
+
+
 def truncate(text: str, n: int = 140) -> str:
     return text if len(text) <= n else text[:n] + "…"
 
@@ -588,9 +626,16 @@ def truncate(text: str, n: int = 140) -> str:
 
 
 def render_hero():
+    b64 = hero_img_b64(HERO_IMAGE)
+    bg_style = (
+        f'style="background-image:url(data:image/jpeg;base64,{b64})"'
+        if b64 else ""
+    )
     st.markdown(
-        """
+        f"""
     <div class="hero">
+        <div class="hero-bg" {bg_style}></div>
+        <div class="hero-overlay"></div>
         <p class="hero-overline">Komatsu Wall Industry</p>
         <h1 class="hero-headline">空間を、直感で見つける。</h1>
         <p class="hero-subhead">製品名でも、雰囲気でも。<br>
@@ -786,19 +831,72 @@ def index_ready() -> bool:
     return False
 
 
+# ─── Data Loading ───────────────────────────────────────
+
+@st.cache_data
+def load_filter_options():
+    """raw_data.json からフィルタリング用の選択肢を作成する"""
+    raw_path = Path(__file__).parent / "data" / "raw_data.json"
+    locations = set()
+    products = set()
+    
+    if raw_path.exists():
+        try:
+            with open(raw_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for item in data:
+                    if item.get("location"):
+                        locations.add(item["location"])
+                    for p in item.get("products", []):
+                        products.add(p)
+        except Exception:
+            pass
+            
+    return sorted(list(locations)), sorted(list(products))
+
+
 # ─── Main ───────────────────────────────────────────────
 
 
 def main():
     render_hero()
     query = render_search()
+    
+    # フィルタリングUI
+    locations, products = load_filter_options()
+    
+    with st.expander("詳細検索 (絞り込み)", expanded=False):
+        c1, c2 = st.columns(2)
+        with c1:
+            sel_locations = st.multiselect("場所", locations, placeholder="場所を選択...")
+        with c2:
+            sel_products = st.multiselect("製品", products, placeholder="製品名を選択...")
 
     if query:
         if index_ready():
             with st.spinner(""):
                 from search import search as vector_search
+                # フィルタリング用に多めに取得
+                results = vector_search(query, n_results=100)
+                
+                # Python側でフィルタリング
+                filtered_results = []
+                for r in results:
+                    # 場所フィルタ
+                    if sel_locations and r.get("location") not in sel_locations:
+                        continue
+                    
+                    # 製品フィルタ (メタデータは "A、B、C" 形式の文字列)
+                    if sel_products:
+                        r_prods = r.get("products", "").split("、")
+                        if not any(sp in r_prods for sp in sel_products):
+                            continue
+                            
+                    filtered_results.append(r)
+                
+                # 上位12件を表示
+                results = filtered_results[:12]
 
-                results = vector_search(query, n_results=12)
             if results:
                 render_results(results, query)
             else:
