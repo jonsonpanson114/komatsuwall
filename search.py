@@ -18,7 +18,7 @@ load_dotenv()
 
 DATA_DIR = Path(__file__).parent / "data"
 ENRICHED_DATA_PATH = DATA_DIR / "enriched_data.json"
-CHROMA_DIR = DATA_DIR / "chroma_db"
+CHROMA_DIR = DATA_DIR / "chroma_db_v2"
 
 COLLECTION_NAME = "komatsu_cases"
 EMBEDDING_MODEL = "models/gemini-embedding-001"
@@ -58,10 +58,7 @@ def build_index() -> chromadb.Collection:
 
     existing = [c.name for c in client.list_collections()]
     if COLLECTION_NAME in existing:
-        collection = client.get_collection(COLLECTION_NAME)
-        if collection.count() > 0:
-            print(f"[Search] 既存インデックスを使用 ({collection.count()} 件)")
-            return collection
+        print(f"[Search] 既存コレクションを削除して再構築します。")
         client.delete_collection(COLLECTION_NAME)
 
     if not ENRICHED_DATA_PATH.exists():
@@ -78,21 +75,41 @@ def build_index() -> chromadb.Collection:
     )
 
     doc_id = 0
+    import time
+    
+    log_file = open("rebuild_progress.log", "w", encoding="utf-8")
+    def log(msg):
+        print(msg)
+        log_file.write(msg + "\n")
+        log_file.flush()
+
+    total_descriptions = sum(len(c.get("descriptions", [])) for c in cases)
+    log(f"[Search] Total descriptions to index: {total_descriptions}")
+
     for case in cases:
         for desc_entry in case.get("descriptions", []):
             description = desc_entry.get("description", "")
             if not description:
                 continue
 
-            embedding = get_embedding(description)
+            # Use pre-calculated refined products from enriched_data.json
+            refined_products = desc_entry.get("refined_products", [])
+            
             metadata = {
                 "case_id": case.get("case_id", ""),
                 "project_name": case.get("project_name", ""),
-                "products": "、".join(case.get("products", [])),
+                "products": "、".join(refined_products), 
                 "location": case.get("location", ""),
                 "image_path": desc_entry.get("image_path", ""),
                 "url": case.get("url", ""),
             }
+
+            try:
+                embedding = get_embedding(description)
+                time.sleep(0.5) # Rate limit handling
+            except Exception as e:
+                log(f"[Search] Embedding Error for {metadata['image_path']}: {e}")
+                continue
 
             collection.add(
                 ids=[str(doc_id)],
@@ -101,7 +118,11 @@ def build_index() -> chromadb.Collection:
                 metadatas=[metadata],
             )
             doc_id += 1
-            print(f"[Search] インデックス追加: {metadata['project_name']} ({doc_id})")
+            if doc_id % 10 == 0:
+                log(f"[Search] インデックス追加: {metadata['project_name']} ({doc_id}/{total_descriptions})")
+
+    log(f"[Search] インデックス構築完了: {doc_id} 件")
+    log_file.close()
 
     print(f"[Search] インデックス構築完了: {doc_id} 件")
     return collection
@@ -118,30 +139,120 @@ def search(query: str, n_results: int = 12) -> list[dict]:
     collection = client.get_collection(COLLECTION_NAME)
     query_embedding = get_query_embedding(query)
 
+    # Fetch more results to allow for deduplication
+    fetch_count = min(n_results * 5, collection.count())
+    
     results = collection.query(
         query_embeddings=[query_embedding],
-        n_results=min(n_results, collection.count()),
+        n_results=fetch_count,
         include=["documents", "metadatas", "distances"],
     )
 
     search_results = []
+    
+    # Deduplication: Group by case_id, keep the best score
+    unique_cases = {}
+    
     if results and results["ids"] and results["ids"][0]:
         for i, doc_id in enumerate(results["ids"][0]):
             meta = results["metadatas"][0][i]
-            search_results.append(
-                {
-                    "id": doc_id,
-                    "project_name": meta.get("project_name", ""),
-                    "products": meta.get("products", ""),
-                    "location": meta.get("location", ""),
-                    "image_path": meta.get("image_path", ""),
-                    "url": meta.get("url", ""),
-                    "description": results["documents"][0][i],
-                    "distance": results["distances"][0][i],
-                }
-            )
+            case_id = meta.get("case_id", "")
+            distance = results["distances"][0][i] if results["distances"] else 0
+            
+            result_obj = {
+                "id": doc_id,
+                "case_id": case_id,
+                "project_name": meta.get("project_name", ""),
+                "products": meta.get("products", ""),
+                "location": meta.get("location", ""),
+                "image_path": meta.get("image_path", ""),
+                "url": meta.get("url", ""),
+                "description": results["documents"][0][i],
+                "distance": distance,
+            }
+            
+            if case_id not in unique_cases:
+                unique_cases[case_id] = result_obj
+            else:
+                # Update if new one is better (lower distance)
+                if distance < unique_cases[case_id]["distance"]:
+                    unique_cases[case_id] = result_obj
 
-    return search_results
+    # Convert to list, sort by distance, and slice
+    search_results = list(unique_cases.values())
+    search_results.sort(key=lambda x: x["distance"])
+    
+    return search_results[:n_results]
+
+
+def get_similar_by_id(case_id: str, n_results: int = 6) -> list[dict]:
+    """
+    指定された case_id のベクトルを使って類似案件を検索する (More Like This)
+    """
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    collection = client.get_collection(COLLECTION_NAME)
+
+    # まず対象のドキュメント（Embedding）を取得
+    # メタデータで検索
+    target_docs = collection.get(
+        where={"case_id": case_id},
+        include=["embeddings"]
+    )
+
+    embeddings = target_docs.get("embeddings")
+    if embeddings is None or len(embeddings) == 0:
+        return []
+
+    # 最初のEmbeddingを使って検索 (1つの事例に複数の画像/説明がある場合は平均するか、最初の一つを使う)
+    # ここでは単純化のため最初のEmbeddingを使用
+    query_embedding = target_docs["embeddings"][0]
+
+    # Fetch more results to allow for deduplication
+    fetch_count = min((n_results + 1) * 5, collection.count())
+
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=fetch_count,
+        include=["documents", "metadatas", "distances"],
+    )
+    
+    search_results = []
+    unique_cases = {}
+    
+    if results and results["ids"] and results["ids"][0]:
+        for i, doc_id in enumerate(results["ids"][0]):
+            meta = results["metadatas"][0][i]
+            res_case_id = meta.get("case_id", "")
+            distance = results["distances"][0][i]
+            
+            # 自分自身は除外
+            if res_case_id == case_id:
+                continue
+                
+            result_obj = {
+                "id": doc_id,
+                "case_id": res_case_id,
+                "project_name": meta.get("project_name", ""),
+                "products": meta.get("products", ""),
+                "location": meta.get("location", ""),
+                "image_path": meta.get("image_path", ""),
+                "url": meta.get("url", ""),
+                "description": results["documents"][0][i],
+                "distance": distance,
+            }
+            
+            if res_case_id not in unique_cases:
+                unique_cases[res_case_id] = result_obj
+            else:
+                 # Update if new one is better (lower distance)
+                if distance < unique_cases[res_case_id]["distance"]:
+                    unique_cases[res_case_id] = result_obj
+
+    # Convert to list, sort by distance, and slice
+    search_results = list(unique_cases.values())
+    search_results.sort(key=lambda x: x["distance"])
+    
+    return search_results[:n_results]
 
 
 if __name__ == "__main__":

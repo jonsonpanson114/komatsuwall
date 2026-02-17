@@ -31,563 +31,505 @@ st.set_page_config(
 NOISE_SVG = "data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"
 
 st.markdown(
-    f"""
+    """
 <style>
 /* ── Typography ── */
-@import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap');
 
-:root {{
-    --display: "Shippori Mincho", "游明朝", "YuMincho", "Hiragino Mincho ProN", serif;
-    --body: "Zen Kaku Gothic New", "游ゴシック", "YuGothic", sans-serif;
+:root {
+    --display: "Times New Roman", "Zen Old Mincho", serif;
+    --body: "Helvetica Neue", "Zen Kaku Gothic New", sans-serif;
 
-    /* Warm architectural palette */
-    --ink: #080808;
-    --charcoal: #1a1a1a;
-    --stone: #4a4a4a;
-    --ash: #8a8a8a;
-    --mist: #b0b0b0;
-    --silk: #d8d4ce;
-    --linen: #eae6df;
-    --cream: #f5f2ec;
-    --paper: #faf8f4;
+    /* Ethereal Glass Palette */
+    --ink: #1e293b;       /* Dark Slate */
+    --charcoal: #334155;  /* Slate */
+    --stone: #64748b;     /* Light Slate */
+    --ash: #94a3b8;       /* Blue Grey */
+    --mist: #cbd5e1;      /* Light Blue Grey */
+    --silk: #e2e8f0;      /* Very Light Blue Grey */
+    --linen: #f1f5f9;     
+    --cream: #f8fafc;
     --white: #ffffff;
+    
+    /* Glass Effect */
+    --glass-bg: rgba(255, 255, 255, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.4);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+    --blur: blur(12px);
 
-    /* Accent — warm bronze */
-    --bronze: #9a7b5b;
-    --bronze-light: #c4a882;
-    --bronze-glow: rgba(154, 123, 91, 0.15);
-}}
+    /* Accent — Soft Blue/Silver */
+    --accent: #60a5fa;
+    --accent-light: #bfdbfe;
+    --accent-glow: rgba(96, 165, 250, 0.15);
+}
 
-html, body, [class*="css"] {{
+html, body, [class*="css"] {
     font-family: var(--body) !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
-}}
+    color: var(--charcoal);
+}
 
 /* ── Streamlit chrome — hide everything ── */
 #MainMenu, footer, header, .stDeployButton,
 div[data-testid="stToolbar"],
 div[data-testid="stDecoration"],
-div[data-testid="stStatusWidget"] {{
+div[data-testid="stStatusWidget"] {
     display: none !important;
     visibility: hidden !important;
-}}
+}
 
-.stApp {{
-    background: var(--paper);
-}}
-.stApp > header {{ background: transparent !important; }}
+.stApp {
+    background: radial-gradient(circle at top left, #f8fafc, #e2e8f0);
+    background-attachment: fixed;
+}
+.stApp > header { background: transparent !important; }
 
-.main .block-container {{
+.main .block-container {
     max-width: 100%;
     padding: 0;
-}}
+}
 
 /* ── Animations ── */
-@keyframes fadeUp {{
-    from {{ opacity: 0; transform: translateY(40px); }}
-    to   {{ opacity: 1; transform: translateY(0); }}
-}}
-@keyframes fadeIn {{
-    from {{ opacity: 0; }}
-    to   {{ opacity: 1; }}
-}}
-@keyframes slideScore {{
-    from {{ width: 0; }}
-}}
-@keyframes slowDrift {{
-    0%   {{ transform: scale(1.0); }}
-    50%  {{ transform: scale(1.05); }}
-    100% {{ transform: scale(1.0); }}
-}}
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
 
 /* ════════════════════════════════════════════════════════
-   HERO — Full-bleed single image, Apple-style
+   HERO — Ethereal, Air, Light
    ════════════════════════════════════════════════════════ */
-.hero {{
-    padding: 180px 40px 140px;
+.hero {
+    padding: 160px 40px 100px;
     text-align: center;
     position: relative;
     overflow: hidden;
-    background-color: var(--ink);
-}}
+    background: transparent;
+}
 
-/* Full-bleed background image */
-.hero-bg {{
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center 40%;
-    animation: slowDrift 50s ease-in-out infinite;
-}}
-
-/* Cinematic gradient overlay — readable text + visible photo */
-.hero-overlay {{
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background:
-        linear-gradient(to bottom,
-            rgba(8,8,8,0.50) 0%,
-            rgba(8,8,8,0.30) 35%,
-            rgba(8,8,8,0.30) 60%,
-            rgba(8,8,8,0.70) 100%);
-}}
-
-/* Film grain noise overlay */
-.hero::after {{
-    content: '';
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    background-image: url("{NOISE_SVG}");
-    background-repeat: repeat;
-    background-size: 256px;
-    opacity: 0.03;
-    pointer-events: none;
-    mix-blend-mode: overlay;
-}}
-
-.hero-overline {{
+.hero-overline {
     font-family: var(--body);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 500;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.2em;
     text-transform: uppercase;
     color: var(--ash);
-    margin: 0 0 28px;
+    margin: 0 0 24px;
     position: relative;
     z-index: 5;
-    animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
-}}
+    animation: fadeUp 1.0s cubic-bezier(0.2, 1, 0.3, 1) 0.1s both;
+}
 
-.hero-headline {{
+.hero-headline {
     font-family: var(--display);
-    font-size: 76px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-size: 80px;
+    font-weight: 400; /* Lighter weight for elegance */
+    letter-spacing: -0.01em;
     line-height: 1.1;
     margin: 0 0 24px;
     position: relative;
     z-index: 5;
-    animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
-    /* Gradient text — white to warm silver */
-    background: linear-gradient(160deg, #ffffff 20%, var(--silk) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
-}}
+    color: var(--charcoal);
+    animation: fadeUp 1.0s cubic-bezier(0.2, 1, 0.3, 1) 0.2s both;
+    text-shadow: 0 10px 30px rgba(100,116,139,0.1);
+}
 
-.hero-subhead {{
+.hero-subhead {
     font-family: var(--body);
-    font-size: 18px;
-    font-weight: 300;
-    color: var(--mist);
-    max-width: 440px;
+    font-size: 16px;
+    font-weight: 400;
+    color: var(--stone);
+    max-width: 500px;
     margin: 0 auto;
-    line-height: 1.72;
-    letter-spacing: 0.04em;
+    line-height: 1.8;
+    letter-spacing: 0.05em;
     position: relative;
     z-index: 5;
-    animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
-}}
+    animation: fadeUp 1.0s cubic-bezier(0.2, 1, 0.3, 1) 0.3s both;
+}
 
 /* ════════════════════════════════════════════════════════
-   SEARCH — Frosted glass with warm accent
+   SEARCH — Floating Glass Capsule
    ════════════════════════════════════════════════════════ */
-div[data-testid="stTextInput"] > div > div > input {{
+div[data-testid="stTextInput"] {
+    max-width: 680px;
+    margin: 0 auto;
+}
+div[data-testid="stTextInput"] > div > div > input {
     font-family: var(--body) !important;
-    font-size: 16px !important;
+    font-size: 15px !important;
     font-weight: 400 !important;
-    padding: 20px 28px !important;
-    border-radius: 14px !important;
-    border: 1px solid var(--silk) !important;
-    background: rgba(255,255,255,0.85) !important;
-    backdrop-filter: blur(24px) saturate(180%) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+    padding: 18px 32px !important;
+    border-radius: 50px !important; /* Capsule */
+    border: 1px solid var(--glass-border) !important;
+    background: var(--glass-bg) !important;
+    backdrop-filter: var(--blur) !important;
+    -webkit-backdrop-filter: var(--blur) !important;
     color: var(--charcoal) !important;
-    letter-spacing: 0.02em !important;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.06),
-                0 1px 3px rgba(0,0,0,0.04) !important;
-}}
-div[data-testid="stTextInput"] > div > div > input::placeholder {{
-    color: var(--mist) !important;
-    font-weight: 300 !important;
     letter-spacing: 0.03em !important;
-}}
-div[data-testid="stTextInput"] > div > div > input:focus {{
-    border-color: var(--bronze) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.06),
-                0 0 0 3px var(--bronze-glow) !important;
+    transition: all 0.3s ease !important;
+    box-shadow: var(--glass-shadow), 
+                0 4px 12px rgba(0,0,0,0.02) !important;
+}
+div[data-testid="stTextInput"] > div > div > input::placeholder {
+    color: var(--ash) !important;
+    font-weight: 300 !important;
+}
+div[data-testid="stTextInput"] > div > div > input:focus {
+    background: rgba(255,255,255,0.85) !important;
+    border-color: var(--white) !important;
+    box-shadow: var(--glass-shadow),
+                0 0 0 4px var(--accent-glow) !important;
     outline: none !important;
-}}
-div[data-testid="stTextInput"] > label {{
+    transform: translateY(-2px);
+}
+div[data-testid="stTextInput"] > label {
     display: none !important;
-}}
+}
 
 /* ════════════════════════════════════════════════════════
-   CHIPS — Editorial text links
+   CHIPS — Minimalist Pills
    ════════════════════════════════════════════════════════ */
-div[data-testid="stButton"] > button {{
+div[data-testid="stButton"] > button {
     font-family: var(--body) !important;
-    background: transparent !important;
-    color: var(--ash) !important;
-    border: 1px solid var(--silk) !important;
-    border-radius: 980px !important;
-    padding: 7px 20px !important;
-    font-size: 13px !important;
+    background: rgba(255,255,255,0.4) !important;
+    color: var(--stone) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    border-radius: 30px !important;
+    padding: 6px 18px !important;
+    font-size: 12px !important;
     font-weight: 400 !important;
-    letter-spacing: 0.04em !important;
-    transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1) !important;
-    white-space: nowrap !important;
-}}
-div[data-testid="stButton"] > button:hover {{
-    color: var(--bronze) !important;
-    border-color: var(--bronze-light) !important;
-    background: rgba(154,123,91,0.04) !important;
+    letter-spacing: 0.03em !important;
+    transition: all 0.2s ease !important;
+    backdrop-filter: blur(4px);
+}
+div[data-testid="stButton"] > button:hover {
+    color: var(--ink) !important;
+    background: rgba(255,255,255,0.8) !important;
+    border-color: var(--white) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     transform: translateY(-1px) !important;
-}}
-div[data-testid="stButton"] > button:active {{
-    transform: scale(0.97) translateY(0) !important;
-}}
+}
+div[data-testid="stButton"] > button:active {
+    transform: scale(0.98) translateY(0) !important;
+}
 
 /* ════════════════════════════════════════════════════════
    RESULTS HEADER
    ════════════════════════════════════════════════════════ */
-.results-bar {{
-    max-width: 1060px;
-    margin: 56px auto 0;
-    padding: 0 32px 24px;
+.results-bar {
+    max-width: 1100px;
+    margin: 40px auto 0;
+    padding: 0 32px 20px;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    border-bottom: 1px solid var(--linen);
-}}
-.results-bar .r-count {{
+    border-bottom: 1px solid rgba(255,255,255,0.3); /* Subtle divider */
+}
+.results-bar .r-count {
     font-family: var(--display);
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--charcoal);
-    letter-spacing: -0.01em;
-}}
-.results-bar .r-query {{
-    font-size: 14px;
+    font-size: 24px;
     font-weight: 400;
+    color: var(--charcoal);
+}
+.results-bar .r-query {
+    font-size: 13px;
     color: var(--ash);
-    letter-spacing: 0.02em;
-}}
+    font-weight: 300;
+}
 
 /* ════════════════════════════════════════════════════════
-   GALLERY CARDS — Cinematic editorial
+   GALLERY CARDS — Glassmorphism
    ════════════════════════════════════════════════════════ */
-.card {{
-    background: var(--white);
-    border-radius: 16px;
+.card {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 28px;
+    margin-bottom: 32px;
     cursor: default;
     position: relative;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04),
-                0 4px 20px rgba(0,0,0,0.05);
-    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
-                box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-    animation: fadeUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    animation-delay: calc(var(--i, 0) * 0.07s);
-}}
-.card:hover {{
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.10),
-                0 8px 16px rgba(0,0,0,0.06);
-}}
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 
+                0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+    animation: fadeUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+.card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 
+                0 10px 10px -5px rgba(0, 0, 0, 0.02);
+    border-color: rgba(255, 255, 255, 0.9);
+}
 
-/* Thumbnail wrapper */
-.card .thumb-wrap {{
+.card .thumb-wrap {
     position: relative;
     overflow: hidden;
-}}
-/* Cinematic gradient overlay on image */
-.card .thumb-wrap::after {{
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(transparent, rgba(0,0,0,0.25));
-    pointer-events: none;
-    transition: opacity 0.4s;
-}}
-.card:hover .thumb-wrap::after {{
-    opacity: 0.7;
-}}
-
-.card .thumb {{
+    margin: 8px 8px 0; /* Padding around image */
+    border-radius: 16px;
+}
+.card .thumb {
     width: 100%;
-    height: 280px;
+    height: 240px;
     object-fit: cover;
     display: block;
-    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-}}
-.card:hover .thumb {{
-    transform: scale(1.06);
-}}
-
-.card .thumb-empty {{
+    transition: transform 0.6s ease;
+}
+.card:hover .thumb {
+    transform: scale(1.04);
+}
+.card .thumb-empty {
     width: 100%;
-    height: 280px;
-    background: linear-gradient(145deg, var(--cream) 0%, var(--linen) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--silk);
-    font-size: 13px;
-    font-family: var(--body);
-    letter-spacing: 0.1em;
-}}
+    height: 240px;
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+}
 
-/* Score bar — thin warm gradient at image bottom */
-.card .score-line {{
+/* Score bar */
+.card .score-line {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 2px;
+    height: 3px;
     z-index: 2;
-    animation: slideScore 0.8s cubic-bezier(0.22, 1, 0.36, 1) 0.3s both;
-}}
+    background: linear-gradient(90deg, #93c5fd, #60a5fa);
+    opacity: 0.8;
+}
 
-/* Card metadata */
-.card .meta {{
-    padding: 22px 24px 28px;
-}}
-.card .meta .name {{
+/* Metadata */
+.card .meta {
+    padding: 20px 24px 24px;
+}
+.card .meta .name {
     font-family: var(--display);
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--charcoal);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
     margin: 0 0 6px;
-    line-height: 1.4;
-    letter-spacing: 0;
-}}
-.card .meta .match-tag {{
+    line-height: 1.3;
+}
+.card .meta .match-tag {
     display: inline-block;
     font-family: var(--body);
     font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--bronze);
-    border: 1px solid var(--bronze-light);
-    padding: 2px 10px;
-    border-radius: 4px;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    background: rgba(96, 165, 250, 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
     margin-left: 8px;
     vertical-align: middle;
-}}
-.card .meta .products {{
+}
+.card .meta .products {
     font-family: var(--body);
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 500;
     color: var(--stone);
-    margin: 0 0 10px;
-    line-height: 1.4;
+    margin: 0 0 12px;
     letter-spacing: 0.02em;
-}}
-.card .meta .desc {{
+}
+.card .meta .desc {
     font-family: var(--body);
     font-size: 13px;
-    font-weight: 300;
-    color: var(--ash);
-    line-height: 1.7;
-    margin: 0 0 18px;
+    font-weight: 400;
+    color: var(--stone);
+    line-height: 1.6;
+    margin: 0 0 16px;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    letter-spacing: 0.01em;
-}}
+}
 
-/* Animated underline link */
-.card .meta .detail-link {{
-    display: inline-block;
-    position: relative;
+/* Link */
+.card .meta .detail-link {
     font-family: var(--body);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--bronze);
-    text-decoration: none;
-    letter-spacing: 0.03em;
-    padding-bottom: 2px;
-    transition: color 0.3s;
-}}
-.card .meta .detail-link::after {{
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 1px;
-    background: var(--bronze);
-    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}}
-.card .meta .detail-link:hover {{
-    color: var(--charcoal);
-}}
-.card .meta .detail-link:hover::after {{
-    width: 100%;
-    background: var(--charcoal);
-}}
-
-/* ════════════════════════════════════════════════════════
-   EMPTY STATE
-   ════════════════════════════════════════════════════════ */
-.empty {{
-    text-align: center;
-    padding: 140px 20px;
-    animation: fadeIn 0.6s ease 0.2s both;
-}}
-.empty h2 {{
-    font-family: var(--display);
-    font-size: 32px;
+    font-size: 12px;
     font-weight: 600;
-    color: var(--charcoal);
-    margin: 0 0 12px;
-    letter-spacing: -0.01em;
-}}
-.empty p {{
-    font-family: var(--body);
-    font-size: 16px;
-    font-weight: 300;
-    color: var(--ash);
-    margin: 0;
+    color: var(--accent);
+    text-decoration: none;
     letter-spacing: 0.02em;
-}}
+    transition: all 0.2s;
+}
+.card .meta .detail-link:hover {
+    color: var(--charcoal);
+}
 
 /* ════════════════════════════════════════════════════════
-   PIPELINE — Warm panel
+   PIPELINE — Minimal Glass
    ════════════════════════════════════════════════════════ */
-.pipeline-wrap {{
-    max-width: 980px;
+.pipeline-wrap {
+    max-width: 900px;
     margin: 64px auto 0;
     padding: 0 32px;
-}}
-.pipeline {{
-    background: linear-gradient(160deg, var(--cream) 0%, var(--linen) 100%);
-    border: 1px solid var(--silk);
-    border-radius: 24px;
-    padding: 56px 48px;
+}
+.pipeline {
+    padding: 40px 0;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-}}
-/* Subtle noise on pipeline panel */
-.pipeline::after {{
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: url("{NOISE_SVG}");
-    background-size: 256px;
-    opacity: 0.015;
-    pointer-events: none;
-}}
-.pipeline .p-title {{
+}
+.pipeline .p-title {
     font-family: var(--display);
-    font-size: 30px;
-    font-weight: 700;
+    font-size: 26px;
+    font-weight: 400;
     color: var(--charcoal);
     margin: 0 0 8px;
-    letter-spacing: -0.01em;
-    position: relative;
-    z-index: 1;
-}}
-.pipeline .p-sub {{
+}
+.pipeline .p-sub {
     font-family: var(--body);
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 300;
-    color: var(--ash);
+    color: var(--stone);
     margin: 0 0 40px;
-    letter-spacing: 0.03em;
-    position: relative;
-    z-index: 1;
-}}
-.step-card {{
-    background: var(--white);
+}
+.step-card {
+    background: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.4);
     border-radius: 16px;
-    padding: 32px 24px 28px;
+    padding: 24px 16px;
     text-align: center;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.03),
-                0 4px 16px rgba(0,0,0,0.03);
-    border: 1px solid rgba(0,0,0,0.03);
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-                box-shadow 0.4s;
-}}
-.step-card:hover {{
-    transform: translateY(-6px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.06),
-                0 16px 40px rgba(0,0,0,0.04);
-}}
-.step-card .s-num {{
+    transition: all 0.3s ease;
+}
+.step-card:hover {
+    background: rgba(255,255,255,0.8);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+}
+.step-card .s-num {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: var(--charcoal);
-    color: var(--white);
-    border-radius: 10px;
-    font-family: var(--body);
-    font-size: 15px;
+    width: 32px;
+    height: 32px;
+    background: var(--silk);
+    color: var(--stone);
+    border-radius: 50%;
+    font-size: 14px;
     font-weight: 700;
-    margin-bottom: 16px;
-}}
-.step-card h4 {{
+    margin-bottom: 12px;
+}
+.step-card h4 {
     font-family: var(--display);
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 500;
     color: var(--charcoal);
-    margin: 0 0 8px;
-}}
-.step-card p {{
-    font-family: var(--body);
-    font-size: 13px;
+    margin: 0 0 6px;
+}
+.step-card p {
+    font-size: 12px;
     color: var(--ash);
     margin: 0;
-    line-height: 1.6;
-    font-weight: 300;
-    letter-spacing: 0.02em;
-}}
+    line-height: 1.5;
+}
 
 /* ════════════════════════════════════════════════════════
    FOOTER
    ════════════════════════════════════════════════════════ */
-.site-footer {{
-    max-width: 980px;
-    margin: 100px auto 0;
-    padding: 24px 32px 56px;
-    border-top: 1px solid var(--linen);
+.site-footer {
+    max-width: 900px;
+    margin: 80px auto 0;
+    padding: 24px 32px 40px;
+    border-top: 1px solid rgba(255,255,255,0.3);
     text-align: center;
-}}
-.site-footer p {{
-    font-family: var(--body);
-    font-size: 11px;
-    font-weight: 400;
-    color: var(--mist);
-    margin: 0;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-}}
+}
+.site-footer p {
+    font-family: var(--display);
+    font-size: 12px;
+    color: var(--ash);
+    font-style: italic;
+    opacity: 0.7;
+}
 
 /* ════════════════════════════════════════════════════════
    STREAMLIT OVERRIDES
    ════════════════════════════════════════════════════════ */
-div[data-testid="stHorizontalBlock"] {{
-    gap: 22px !important;
-}}
-div[data-testid="stSpinner"] {{
+div[data-testid="stHorizontalBlock"] {
+    gap: 16px !important;
+}
+div[data-testid="stSpinner"] {
     text-align: center;
-}}
+    color: var(--stone) !important;
+}
+/* ════════════════════════════════════════════════════════
+   DETAIL VIEW — Refined
+   ════════════════════════════════════════════════════════ */
+.detail-card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 24px;
+    padding: 48px;
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
+    margin-bottom: 60px;
+    animation: fadeUp 0.6s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+
+.detail-title {
+    font-family: var(--display);
+    font-size: 36px;
+    font-weight: 500;
+    color: var(--ink);
+    margin: 0 0 16px;
+    line-height: 1.2;
+}
+
+.detail-meta {
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--stone);
+    margin-bottom: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+}
+
+.product-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--linen);
+    color: var(--charcoal);
+    border-radius: 99px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid var(--silk);
+}
+.location-badge {
+    display: inline-block;
+    color: var(--ash);
+    font-weight: 500;
+    margin-right: 8px;
+}
+
+.detail-desc {
+    font-family: var(--body);
+    font-size: 16px;
+    line-height: 1.9;
+    color: var(--charcoal);
+    margin-top: 32px;
+    padding-top: 32px;
+    border-top: 1px solid var(--silk);
+}
+
+.gallery-label {
+    font-family: var(--body);
+    font-size: 12px;
+    color: var(--ash);
+    margin-bottom: 4px;
+    display: block;
+}
+
+
 </style>
+
 """,
     unsafe_allow_html=True,
 )
@@ -626,16 +568,10 @@ def truncate(text: str, n: int = 140) -> str:
 
 
 def render_hero():
-    b64 = hero_img_b64(HERO_IMAGE)
-    bg_style = (
-        f'style="background-image:url(data:image/jpeg;base64,{b64})"'
-        if b64 else ""
-    )
+    # Ethereal design relies on CSS background gradient, no heavy hero image
     st.markdown(
-        f"""
+        """
     <div class="hero">
-        <div class="hero-bg" {bg_style}></div>
-        <div class="hero-overlay"></div>
         <p class="hero-overline">Komatsu Wall Industry</p>
         <h1 class="hero-headline">空間を、直感で見つける。</h1>
         <p class="hero-subhead">製品名でも、雰囲気でも。<br>
@@ -698,7 +634,7 @@ def render_card(r: dict, card_index: int = 0):
     name = r.get("project_name", "")
     products = r.get("products", "")
     desc = truncate(r.get("description", ""), 140)
-    url = r.get("url", "#")
+    # URL link removed in favor of in-app detail view
 
     st.markdown(
         f"""
@@ -711,7 +647,6 @@ def render_card(r: dict, card_index: int = 0):
             <p class="name">{name}<span class="match-tag">{pct}%</span></p>
             <p class="products">{products}</p>
             <p class="desc">{desc}</p>
-            <a class="detail-link" href="{url}" target="_blank">さらに詳しく</a>
         </div>
     </div>
     """,
@@ -724,7 +659,7 @@ def render_results(results: list[dict], query: str):
         f"""
     <div class="results-bar">
         <span class="r-count">{len(results)}件の施工事例</span>
-        <span class="r-query">「{query}」</span>
+        <span class="r-query">{query}</span>
     </div>
     """,
         unsafe_allow_html=True,
@@ -736,8 +671,18 @@ def render_results(results: list[dict], query: str):
         for i, col in enumerate(cols):
             idx = row + i
             if idx < len(results):
+                r = results[idx]
+                case_id = r.get("case_id")
+                
                 with col:
-                    render_card(results[idx], card_index=card_idx)
+                    render_card(r, card_index=card_idx)
+                    
+                    # 詳細ボタン (カードの下に配置)
+                    # Unique key is essential here
+                    if st.button("詳細を見る", key=f"det_btn_{idx}_{case_id}", use_container_width=True):
+                        st.session_state["selected_case_id"] = case_id
+                        st.rerun()
+                    
                     card_idx += 1
 
 
@@ -816,7 +761,7 @@ def render_footer():
 
 
 def index_ready() -> bool:
-    db = Path(__file__).parent / "data" / "chroma_db"
+    db = Path(__file__).parent / "data" / "chroma_db_v2"
     if not db.exists():
         return False
     try:
@@ -855,13 +800,156 @@ def load_filter_options():
     return sorted(list(locations)), sorted(list(products))
 
 
+@st.cache_data
+def load_case_map():
+    """enriched_data.json を読み込んで case_id をキーにした辞書を返す"""
+    path = Path(__file__).parent / "data" / "enriched_data.json"
+    if not path.exists():
+        # enriched がなければ raw_data で代用 (画像はあるはず)
+        path = Path(__file__).parent / "data" / "raw_data.json"
+    
+    mapping = {}
+    if path.exists():
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                for item in data:
+                    mapping[item["case_id"]] = item
+        except Exception:
+            pass
+    return mapping
+
+
+def render_detail_view(case_id: str):
+    case_map = load_case_map()
+    case = case_map.get(case_id)
+    
+    if not case:
+        st.error("事例データの読み込みに失敗しました。")
+        if st.button("戻る"):
+            del st.session_state["selected_case_id"]
+            st.rerun()
+        return
+
+    # Back button
+    if st.button("← 検索結果に戻る", key="back_btn"):
+        del st.session_state["selected_case_id"]
+        st.rerun()
+
+    # Data preparation
+    project_name = case.get('project_name', 'Untitled Project')
+    location = case.get('location', '')
+    products = case.get('products', [])
+    
+    # HTML Construction for the Card
+    
+    # Badges HTML
+    badges_html = ""
+    for p in products:
+        badges_html += f'<span class="product-badge">{p}</span>'
+    
+    # Location HTML
+    loc_html = f'<span class="location-badge">{location}</span>' if location else ""
+
+    # Description
+    descriptions = case.get("descriptions", [])
+    desc_text = descriptions[0].get("description", "") if descriptions else ""
+    
+    # Start of Card
+    st.markdown(f"""
+    <div class="detail-card">
+        <h1 class="detail-title">{project_name}</h1>
+        <div class="detail-meta">
+            {loc_html}
+            {badges_html}
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Main Image (First one)
+    image_paths = case.get("local_image_paths", [])
+    if image_paths:
+        main_img_path = image_paths[0]
+        if Path(main_img_path).exists():
+            st.image(main_img_path, use_container_width=True)
+            
+            # Show products for main image (refined)
+            if descriptions:
+                main_prods = descriptions[0].get("refined_products", [])
+                if main_prods:
+                    p_str = ", ".join(main_prods)
+                    st.markdown(f'<span class="gallery-label">写っている製品: {p_str}</span>', unsafe_allow_html=True)
+
+    # Description Text
+    if desc_text:
+        st.markdown(f'<div class="detail-desc">{desc_text}</div>', unsafe_allow_html=True)
+
+    # Close Card div
+    st.markdown("</div>", unsafe_allow_html=True)
+
+    # Gallery
+    if len(image_paths) > 1:
+        st.markdown("### Gallery")
+        cols = st.columns(3)
+        for i, img_path in enumerate(image_paths[1:]): # Skip first one
+            idx = i + 1 
+            with cols[i % 3]:
+                if Path(img_path).exists():
+                    st.image(img_path, use_container_width=True)
+                    
+                    if idx < len(descriptions):
+                        g_prods = descriptions[idx].get("refined_products", [])
+                        if g_prods:
+                             st.markdown(f"<span class='gallery-label'>製品: {', '.join(g_prods)}</span>", unsafe_allow_html=True)
+                        else:
+                             st.markdown("<div style='margin-bottom:16px'></div>", unsafe_allow_html=True)
+
+    st.markdown("---")
+    
+    # Similar Search Button
+    st.markdown("### この事例にピンときたら")
+    if st.button("🔍 この事例に似た案件を探す (More Like This)", type="primary", use_container_width=True):
+        st.session_state["similar_query_id"] = case_id
+        del st.session_state["selected_case_id"] # 詳細ビューを閉じる
+        st.rerun()
+
+
 # ─── Main ───────────────────────────────────────────────
 
 
 def main():
+    # Session State Initialization
+    if "selected_case_id" not in st.session_state:
+        st.session_state["selected_case_id"] = None
+    if "similar_query_id" not in st.session_state:
+        st.session_state["similar_query_id"] = None
+    if "search_query" not in st.session_state: # Ensure search_query is initialized
+        st.session_state["search_query"] = ""
+
+    # Detail View Rendering
+    if st.session_state["selected_case_id"]:
+        render_detail_view(st.session_state["selected_case_id"])
+        render_footer()
+        return
+
     render_hero()
-    query = render_search()
     
+    # 類似検索モードの場合は検索バーに値を入れない、あるいは特別な表示にする
+    initial_query = ""
+    if st.session_state.get("search_query"):
+        initial_query = st.session_state["search_query"]
+        
+    query = st.text_input(
+        "search",
+        value=initial_query,
+        placeholder="明るく開放的なオフィス、木目調の温かい空間…",
+        key="search_input", # keyを変更してsession_stateの競合を避ける
+        label_visibility="collapsed",
+    )
+    
+    # 検索バーの下にサジェスト (類似検索時は表示しない？いや、してもいい)
+    if not st.session_state["similar_query_id"]:
+        render_suggestions()
+
     # フィルタリングUI
     locations, products = load_filter_options()
     
@@ -872,50 +960,88 @@ def main():
         with c2:
             sel_products = st.multiselect("製品", products, placeholder="製品名を選択...")
 
-    if query:
+    # Search Logic
+    results = []
+    mode_title = ""
+
+    if st.session_state["similar_query_id"]:
+        if index_ready():
+            with st.spinner("類似案件を探しています..."):
+                from search import get_similar_by_id
+                # 類似検索実行
+                sim_id = st.session_state["similar_query_id"]
+                results = get_similar_by_id(sim_id, n_results=100)
+                
+                # ケースマップからプロジェクト名を取得して表示
+                case_map = load_case_map()
+                original_case = case_map.get(sim_id)
+                p_name = original_case.get("project_name", "選択した事例") if original_case else "選択した事例"
+                mode_title = f"「{p_name}」に似た事例"
+                
+                if query and query != initial_query: # ユーザーが何か入力したら類似検索モード解除
+                    st.session_state["similar_query_id"] = None
+                    st.session_state["search_query"] = query
+                    st.rerun()
+
+    elif query:
         if index_ready():
             with st.spinner(""):
                 from search import search as vector_search
-                # フィルタリング用に多めに取得
                 results = vector_search(query, n_results=100)
+                mode_title = f"「{query}」"
                 
-                # Python側でフィルタリング
-                filtered_results = []
-                for r in results:
-                    # 場所フィルタ
-                    if sel_locations and r.get("location") not in sel_locations:
-                        continue
+    # Filtering (共通)
+    if results:
+         # Python側でフィルタリング
+        filtered_results = []
+        for r in results:
+            # 場所フィルタ
+            if sel_locations and r.get("location") not in sel_locations:
+                continue
+            
+            # 製品フィルタ
+            if sel_products:
+                r_prods = r.get("products", "").split("、")
+                if not any(sp in r_prods for sp in sel_products):
+                    continue
                     
-                    # 製品フィルタ (メタデータは "A、B、C" 形式の文字列)
-                    if sel_products:
-                        r_prods = r.get("products", "").split("、")
-                        if not any(sp in r_prods for sp in sel_products):
-                            continue
-                            
-                    filtered_results.append(r)
-                
-                # 上位12件を表示
-                results = filtered_results[:12]
-
-            if results:
-                render_results(results, query)
-            else:
-                st.markdown(
-                    '<div class="empty"><h2>一致する事例が見つかりませんでした。</h2>'
-                    "<p>別のキーワードや表現で試してみてください。</p></div>",
-                    unsafe_allow_html=True,
-                )
+            filtered_results.append(r)
+        
+        # 上位表示
+        display_results = filtered_results[:12]
+        
+        if display_results:
+            render_results(display_results, mode_title)
         else:
             st.markdown(
-                '<div class="empty"><h2>検索の準備ができていません。</h2>'
-                "<p>下のパイプラインからデータを構築してください。</p></div>",
+                '<div class="empty"><h2>一致する事例が見つかりませんでした。</h2>'
+                "<p>別のキーワードや表現で試してみてください。</p></div>",
                 unsafe_allow_html=True,
             )
 
-    if not index_ready():
+    elif not index_ready():
         render_pipeline()
 
     render_footer()
+
+
+def set_search(query):
+    st.session_state["search_query"] = query
+    st.session_state["search_input"] = query
+
+def render_suggestions():
+    suggestions = [
+        "開放的なオフィス",
+        "和モダンな内装",
+        "ガラスで仕切られた会議室",
+        "温かみのある木目調",
+        "ホテルライクなロビー",
+        "明るい教室",
+    ]
+    cols = st.columns(len(suggestions))
+    for i, s in enumerate(suggestions):
+        with cols[i]:
+            st.button(s, key=f"sg_{i}", on_click=set_search, args=(s,))
 
 
 if __name__ == "__main__":
