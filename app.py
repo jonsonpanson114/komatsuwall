@@ -1037,9 +1037,16 @@ def main():
         if index_ready():
             with st.spinner(""):
                 from search import search as vector_search
-                results = vector_search(query, n_results=100)
+                results = vector_search(query, n_results=300)
                 mode_title = f"「{query}」"
-                
+    
+    else:
+        # Query is empty: Show ALL items (or a large shuffle)
+        if index_ready():
+             from search import get_all_items
+             results = get_all_items(n_results=300)
+             mode_title = "すべての施工事例"
+
     # Filtering (共通)
     if results:
          # Python側でフィルタリング
@@ -1057,8 +1064,8 @@ def main():
                     
             filtered_results.append(r)
         
-        # 上位表示
-        display_results = filtered_results[:12]
+        # 上位表示 (全件表示のためスライス制限を解除)
+        display_results = filtered_results # Removed [:12] limit
         
         if display_results:
             render_results(display_results, mode_title)

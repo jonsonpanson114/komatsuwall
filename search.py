@@ -255,6 +255,51 @@ def get_similar_by_id(case_id: str, n_results: int = 6) -> list[dict]:
     return search_results[:n_results]
 
 
+def get_all_items(n_results: int = 300) -> list[dict]:
+    """
+    インデックスされている全ての（または指定数の）データを取得する。
+    デフォルトの表示や「全件表示」に使用。
+    """
+    configure_api()
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    collection = client.get_collection(COLLECTION_NAME)
+    
+    # peekだとランダムではないが、全件取得には使える
+    # limitより多い場合はgetを使う
+    count = collection.count()
+    limit = min(n_results, count)
+    
+    results = collection.get(
+        limit=limit,
+        include=["documents", "metadatas"]
+    )
+    
+    search_results = []
+    unique_cases = {}
+    
+    if results and results["ids"]:
+        for i, doc_id in enumerate(results["ids"]):
+            meta = results["metadatas"][i]
+            case_id = meta.get("case_id", "")
+            
+            result_obj = {
+                "id": doc_id,
+                "case_id": case_id,
+                "project_name": meta.get("project_name", ""),
+                "products": meta.get("products", ""),
+                "location": meta.get("location", ""),
+                "image_path": meta.get("image_path", ""),
+                "url": meta.get("url", ""),
+                "description": results["documents"][i],
+                "distance": 0.0, # distance lookup not applicable
+            }
+            
+            if case_id not in unique_cases:
+                unique_cases[case_id] = result_obj
+            # No distance sorting needed for 'all' view, just distinct case_ids
+            
+    return list(unique_cases.values())
+
 if __name__ == "__main__":
     build_index()
     results = search("明るく開放的なオフィス空間")
