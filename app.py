@@ -608,8 +608,32 @@ def render_search():
     return query
 
 
+
+def fix_path(path: str) -> str:
+    """
+    Fix absolute Windows paths to relative Linux-friendly paths for Streamlit Cloud.
+    Converts 'c:\\Users\\...\\data\\images\\xxx.jpg' -> 'data/images/xxx.jpg'
+    """
+    if not path:
+        return ""
+    
+    # Standardize separators
+    p = path.replace("\\", "/")
+    
+    # If it contains 'data/images', slice from there
+    if "data/images" in p:
+        return p[p.find("data/images"):]
+        
+    # Fallback: if it's already a filename or relative
+    return p
+
 def render_card(r: dict, card_index: int = 0):
-    path = r.get("image_path", "")
+    raw_path = r.get("image_path", "")
+    path = fix_path(raw_path)
+    
+    # Debug info (optional, remove in prod if noisy)
+    # st.write(f"Fixed: {path}")
+
     if path and Path(path).exists():
         b64 = img_b64(path)
         thumb = (
@@ -618,7 +642,19 @@ def render_card(r: dict, card_index: int = 0):
             else '<div class="thumb-empty"></div>'
         )
     else:
-        thumb = '<div class="thumb-empty"></div>'
+        # Check if we can find it in 'data/images' by filename
+        filename = Path(raw_path).name
+        alt_path = f"data/images/{filename}"
+        if Path(alt_path).exists():
+             b64 = img_b64(alt_path)
+             thumb = (
+                f'<img class="thumb" src="data:image/jpeg;base64,{b64}" alt="">'
+                if b64
+                else '<div class="thumb-empty"></div>'
+            )
+        else:
+            thumb = '<div class="thumb-empty"></div>'
+
 
     dist = r.get("distance", 1.0)
     pct = max(0, int((1 - dist) * 100))
@@ -868,7 +904,9 @@ def render_detail_view(case_id: str):
     # Main Image (First one)
     image_paths = case.get("local_image_paths", [])
     if image_paths:
-        main_img_path = image_paths[0]
+        raw_main = image_paths[0]
+        main_img_path = fix_path(raw_main)
+        
         if Path(main_img_path).exists():
             st.image(main_img_path, use_container_width=True)
             
@@ -878,6 +916,12 @@ def render_detail_view(case_id: str):
                 if main_prods:
                     p_str = ", ".join(main_prods)
                     st.markdown(f'<span class="gallery-label">写っている製品: {p_str}</span>', unsafe_allow_html=True)
+        else:
+             # Fallback check
+             fname = Path(raw_main).name
+             alt_main = f"data/images/{fname}"
+             if Path(alt_main).exists():
+                 st.image(alt_main, use_container_width=True)
 
     # Description Text
     if desc_text:
@@ -890,11 +934,17 @@ def render_detail_view(case_id: str):
     if len(image_paths) > 1:
         st.markdown("### Gallery")
         cols = st.columns(3)
-        for i, img_path in enumerate(image_paths[1:]): # Skip first one
+        for i, raw_path in enumerate(image_paths[1:]): # Skip first one
             idx = i + 1 
+            path = fix_path(raw_path)
+            
+            # Fallback path logic
+            if not Path(path).exists():
+                path = f"data/images/{Path(raw_path).name}"
+
             with cols[i % 3]:
-                if Path(img_path).exists():
-                    st.image(img_path, use_container_width=True)
+                if Path(path).exists():
+                    st.image(path, use_container_width=True)
                     
                     if idx < len(descriptions):
                         g_prods = descriptions[idx].get("refined_products", [])
