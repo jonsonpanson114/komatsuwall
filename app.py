@@ -6,6 +6,7 @@ Architectural Monograph Design
 import base64
 import io
 import json
+import textwrap  # Added for safe HTML rendering
 from pathlib import Path
 
 import streamlit as st
@@ -580,15 +581,14 @@ def truncate(text: str, n: int = 140) -> str:
 
 def render_hero():
     # Ethereal design relies on CSS background gradient, no heavy hero image
-    st.markdown(
-        """
-    <div class="hero">
-        <p class="hero-overline">Komatsu Wall Industry</p>
-        <h1 class="hero-headline">空間を、直感で見つける。</h1>
-        <p class="hero-subhead">製品名でも、雰囲気でも。<br>
-        イメージするだけで、理想の施工事例に出会えます。</p>
-    </div>
-    """,
+    st.markdown(textwrap.dedent("""
+<div class="hero">
+    <p class="hero-overline">Komatsu Wall Industry</p>
+    <h1 class="hero-headline">空間を、直感で見つける。</h1>
+    <p class="hero-subhead">製品名でも、雰囲気でも。<br>
+    イメージするだけで、理想の施工事例に出会えます。</p>
+</div>
+"""),
         unsafe_allow_html=True,
     )
 
@@ -682,33 +682,31 @@ def render_card(r: dict, card_index: int = 0, show_score: bool = True):
     match_badge = f'<span class="match-tag">{pct}%</span>' if show_score and pct > 0 else ""
     score_line = f'<div class="score-line" style="width:{pct}%;background:{bar_bg};"></div>' if show_score and pct > 0 else ""
 
-    st.markdown(
-        f"""
-    <div class="card" style="--i:{card_index}">
-        <div class="thumb-wrap">
-            {thumb}
-            {score_line}
-        </div>
-        <div class="meta">
-            <p class="name">{name}{match_badge}</p>
-            <p class="products">{products}</p>
-            <p class="desc">{desc}</p>
-        </div>
+    st.markdown(textwrap.dedent(f"""
+<div class="card" style="--i:{card_index}">
+    <div class="thumb-wrap">
+        {thumb}
+        {score_line}
     </div>
-    """,
+    <div class="meta">
+        <p class="name">{name}{match_badge}</p>
+        <p class="products">{products}</p>
+        <p class="desc">{desc}</p>
+    </div>
+</div>
+"""),
         unsafe_allow_html=True,
     )
 
 
 
 def render_results(results: list[dict], query: str):
-    st.markdown(
-        f"""
-    <div class="results-bar">
-        <span class="r-count">{len(results)}件の施工事例</span>
-        <span class="r-query">{query}</span>
-    </div>
-    """,
+    st.markdown(textwrap.dedent(f"""
+<div class="results-bar">
+    <span class="r-count">{len(results)}件の施工事例</span>
+    <span class="r-query">{query}</span>
+</div>
+"""),
         unsafe_allow_html=True,
     )
 
@@ -756,14 +754,13 @@ def render_pipeline():
     ]
     for i, (num, title, desc) in enumerate(steps):
         with cols[i]:
-            st.markdown(
-                f"""
-            <div class="step-card">
-                <div class="s-num">{num}</div>
-                <h4>{title}</h4>
-                <p>{desc}</p>
-            </div>
-            """,
+            st.markdown(textwrap.dedent(f"""
+<div class="step-card">
+    <div class="s-num">{num}</div>
+    <h4>{title}</h4>
+    <p>{desc}</p>
+</div>
+"""),
                 unsafe_allow_html=True,
             )
 
@@ -794,12 +791,11 @@ def render_pipeline():
 
 
 def render_footer():
-    st.markdown(
-        """
-    <div class="site-footer">
-        <p>Komatsu Wall &mdash; Gemini Embedding &amp; ChromaDB</p>
-    </div>
-    """,
+    st.markdown(textwrap.dedent("""
+<div class="site-footer">
+    <p>Komatsu Wall &mdash; Gemini Embedding &amp; ChromaDB</p>
+</div>
+"""),
         unsafe_allow_html=True,
     )
 
@@ -942,14 +938,15 @@ def render_detail_view(case_id: str):
     desc_text = descriptions[0].get("description", "") if descriptions else ""
     
     # Start of Card
-    st.markdown(f"""
-    <div class="detail-card">
-        <h1 class="detail-title">{project_name}</h1>
-        <div class="detail-meta">
-            {loc_html}
-            {badges_html}
-        </div>
-    """, unsafe_allow_html=True)
+    # Start of Card
+    st.markdown(textwrap.dedent(f"""
+<div class="detail-card">
+    <h1 class="detail-title">{project_name}</h1>
+    <div class="detail-meta">
+        {loc_html}
+        {badges_html}
+    </div>
+"""), unsafe_allow_html=True)
 
     # Main Image (First one)
     image_paths = case.get("local_image_paths", [])
@@ -1169,13 +1166,12 @@ def main():
         
         if display_results:
             # ヘッダー：件数表示
-            st.markdown(
-                f"""
-            <div class="results-bar">
-                <span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
-                <span class="r-query">{mode_title}</span>
-            </div>
-            """,
+            st.markdown(textwrap.dedent(f"""
+<div class="results-bar">
+    <span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
+    <span class="r-query">{mode_title}</span>
+</div>
+"""),
                 unsafe_allow_html=True,
             )
             
