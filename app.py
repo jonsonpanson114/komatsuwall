@@ -581,14 +581,14 @@ def truncate(text: str, n: int = 140) -> str:
 
 def render_hero():
     # Ethereal design relies on CSS background gradient, no heavy hero image
-    st.markdown(textwrap.dedent("""
+    st.markdown("""
 <div class="hero">
-    <p class="hero-overline">Komatsu Wall Industry</p>
-    <h1 class="hero-headline">空間を、直感で見つける。</h1>
-    <p class="hero-subhead">製品名でも、雰囲気でも。<br>
-    イメージするだけで、理想の施工事例に出会えます。</p>
+<p class="hero-overline">Komatsu Wall Industry</p>
+<h1 class="hero-headline">空間を、直感で見つける。</h1>
+<p class="hero-subhead">製品名でも、雰囲気でも。<br>
+イメージするだけで、理想の施工事例に出会えます。</p>
 </div>
-""").strip(),
+""",
         unsafe_allow_html=True,
     )
 
@@ -682,31 +682,31 @@ def render_card(r: dict, card_index: int = 0, show_score: bool = True):
     match_badge = f'<span class="match-tag">{pct}%</span>' if show_score and pct > 0 else ""
     score_line = f'<div class="score-line" style="width:{pct}%;background:{bar_bg};"></div>' if show_score and pct > 0 else ""
 
-    st.markdown(textwrap.dedent(f"""
+    st.markdown(f"""
 <div class="card" style="--i:{card_index}">
-    <div class="thumb-wrap">
-        {thumb}
-        {score_line}
-    </div>
-    <div class="meta">
-        <p class="name">{name}{match_badge}</p>
-        <p class="products">{products}</p>
-        <p class="desc">{desc}</p>
-    </div>
+<div class="thumb-wrap">
+{thumb}
+{score_line}
 </div>
-""").strip(),
+<div class="meta">
+<p class="name">{name}{match_badge}</p>
+<p class="products">{products}</p>
+<p class="desc">{desc}</p>
+</div>
+</div>
+""",
         unsafe_allow_html=True,
     )
 
 
 
 def render_results(results: list[dict], query: str):
-    st.markdown(textwrap.dedent(f"""
+    st.markdown(f"""
 <div class="results-bar">
-    <span class="r-count">{len(results)}件の施工事例</span>
-    <span class="r-query">{query}</span>
+<span class="r-count">{len(results)}件の施工事例</span>
+<span class="r-query">{query}</span>
 </div>
-""").strip(),
+""",
         unsafe_allow_html=True,
     )
 
@@ -754,13 +754,13 @@ def render_pipeline():
     ]
     for i, (num, title, desc) in enumerate(steps):
         with cols[i]:
-            st.markdown(textwrap.dedent(f"""
+            st.markdown(f"""
 <div class="step-card">
-    <div class="s-num">{num}</div>
-    <h4>{title}</h4>
-    <p>{desc}</p>
+<div class="s-num">{num}</div>
+<h4>{title}</h4>
+<p>{desc}</p>
 </div>
-""").strip(),
+""",
                 unsafe_allow_html=True,
             )
 
@@ -791,11 +791,11 @@ def render_pipeline():
 
 
 def render_footer():
-    st.markdown(textwrap.dedent("""
+    st.markdown("""
 <div class="site-footer">
-    <p>Komatsu Wall &mdash; Gemini Embedding &amp; ChromaDB</p>
+<p>Komatsu Wall &mdash; Gemini Embedding &amp; ChromaDB</p>
 </div>
-""").strip(),
+""",
         unsafe_allow_html=True,
     )
 
@@ -939,14 +939,14 @@ def render_detail_view(case_id: str):
     
     # Start of Card
     # Start of Card
-    st.markdown(textwrap.dedent(f"""
+    st.markdown(f"""
 <div class="detail-card">
-    <h1 class="detail-title">{project_name}</h1>
-    <div class="detail-meta">
-        {loc_html}
-        {badges_html}
-    </div>
-""").strip(), unsafe_allow_html=True)
+<h1 class="detail-title">{project_name}</h1>
+<div class="detail-meta">
+{loc_html}
+{badges_html}
+</div>
+""", unsafe_allow_html=True)
 
     # Main Image (First one)
     image_paths = case.get("local_image_paths", [])
@@ -1166,12 +1166,12 @@ def main():
         
         if display_results:
             # ヘッダー：件数表示
-            st.markdown(textwrap.dedent(f"""
+            st.markdown(f"""
 <div class="results-bar">
-    <span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
-    <span class="r-query">{mode_title}</span>
+<span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
+<span class="r-query">{mode_title}</span>
 </div>
-""").strip(),
+""",
                 unsafe_allow_html=True,
             )
             
