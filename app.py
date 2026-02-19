@@ -827,7 +827,7 @@ def index_ready() -> bool:
 
 @st.cache_data
 def load_filter_options():
-    """raw_data.json からフィルタリング用の選択肢を作成する"""
+    """要素: raw_data.json からフィルタリング用の選択肢を作成"""
     raw_path = Path(__file__).parent / "data" / "raw_data.json"
     locations = set()
     products = set()
@@ -845,6 +845,21 @@ def load_filter_options():
             pass
             
     return sorted(list(locations)), sorted(list(products))
+
+
+@st.cache_data(ttl=3600)  # 1時間キャッシュ
+def cached_get_all_items():
+    """全件取得結果をキャッシュ。起動後初回のみ ChromaDBにアクセスする。"""
+    from search import get_all_items
+    return get_all_items(n_results=300)
+
+
+@st.cache_data(ttl=3600)  # 1時間キャッシュ
+def cached_search(query: str):
+    """クエリ検索結果をキャッシュ。同じクエリには2回目以降 APIを叩かない。"""
+    from search import search as vector_search
+    return vector_search(query, n_results=300)
+
 
 
 @st.cache_data
@@ -1056,16 +1071,15 @@ def main():
     elif query:
         if index_ready():
             with st.spinner(""):
-                from search import search as vector_search
-                results = vector_search(query, n_results=300)
+                results = cached_search(query)
                 mode_title = f"「{query}」"
     
     else:
-        # Query is empty: Show ALL items (or a large shuffle)
+        # Query is empty: Show ALL items
         if index_ready():
-             from search import get_all_items
-             results = get_all_items(n_results=300)
-             mode_title = "すべての施工事例"
+            with st.spinner("一覧を読み込み中…"):
+                results = cached_get_all_items()
+                mode_title = "すべての施工事例"
 
     # Filtering (共通)
     if results:
