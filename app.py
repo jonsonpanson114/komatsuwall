@@ -538,10 +538,21 @@ div[data-testid="stSpinner"] {
 # ─── Utilities ──────────────────────────────────────────
 
 
-def img_b64(path: str) -> str:
+def img_b64(path: str, max_width: int = 400) -> str:
+    """画像を圧縮してbase64に変換（サムネイル用）"""
     try:
-        with open(path, "rb") as f:
-            return base64.b64encode(f.read()).decode()
+        img = Image.open(path)
+        # Resize maintaining aspect ratio
+        ratio = max_width / img.width
+        if ratio < 1.0:  # Only downscale, never upscale
+            new_h = int(img.height * ratio)
+            img = img.resize((max_width, new_h), Image.LANCZOS)
+        # Convert RGBA to RGB if needed
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+        buf = io.BytesIO()
+        img.save(buf, format="JPEG", quality=72, optimize=True)
+        return base64.b64encode(buf.getvalue()).decode()
     except Exception:
         return ""
 
@@ -967,13 +978,17 @@ def render_detail_view(case_id: str):
 
 
 def main():
+    PAGE_SIZE = 24  # 1ページに表示する件数
+
     # Session State Initialization
     if "selected_case_id" not in st.session_state:
         st.session_state["selected_case_id"] = None
     if "similar_query_id" not in st.session_state:
         st.session_state["similar_query_id"] = None
-    if "search_query" not in st.session_state: # Ensure search_query is initialized
+    if "search_query" not in st.session_state:
         st.session_state["search_query"] = ""
+    if "page" not in st.session_state:
+        st.session_state["page"] = 0
 
     # Detail View Rendering
     if st.session_state["selected_case_id"]:
@@ -992,9 +1007,14 @@ def main():
         "search",
         value=initial_query,
         placeholder="明るく開放的なオフィス、木目調の温かい空間…",
-        key="search_input", # keyを変更してsession_stateの競合を避ける
+        key="search_input",
         label_visibility="collapsed",
     )
+    
+    # クエリが変わったらページをリセット
+    if query != st.session_state["search_query"]:
+        st.session_state["page"] = 0
+        st.session_state["search_query"] = query
     
     # 検索バーの下にサジェスト (類似検索時は表示しない？いや、してもいい)
     if not st.session_state["similar_query_id"]:
@@ -1049,26 +1069,72 @@ def main():
 
     # Filtering (共通)
     if results:
-         # Python側でフィルタリング
+        # Python側でフィルタリング
         filtered_results = []
         for r in results:
-            # 場所フィルタ
             if sel_locations and r.get("location") not in sel_locations:
                 continue
-            
-            # 製品フィルタ
             if sel_products:
                 r_prods = r.get("products", "").split("、")
                 if not any(sp in r_prods for sp in sel_products):
                     continue
-                    
             filtered_results.append(r)
         
-        # 上位表示 (全件表示のためスライス制限を解除)
-        display_results = filtered_results # Removed [:12] limit
+        total = len(filtered_results)
+        total_pages = max(1, (total + PAGE_SIZE - 1) // PAGE_SIZE)
+        page = st.session_state.get("page", 0)
+        page = max(0, min(page, total_pages - 1))  # Clamp
+        
+        start = page * PAGE_SIZE
+        display_results = filtered_results[start:start + PAGE_SIZE]
         
         if display_results:
-            render_results(display_results, mode_title)
+            # ヘッダー：件数表示
+            st.markdown(
+                f"""
+            <div class="results-bar">
+                <span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
+                <span class="r-query">{mode_title}</span>
+            </div>
+            """,
+                unsafe_allow_html=True,
+            )
+            
+            # カード表示
+            card_idx = 0
+            for row in range(0, len(display_results), 3):
+                cols = st.columns(3, gap="medium")
+                for i, col in enumerate(cols):
+                    idx = row + i
+                    if idx < len(display_results):
+                        r = display_results[idx]
+                        case_id = r.get("case_id")
+                        with col:
+                            render_card(r, card_index=card_idx)
+                            if st.button("詳細を見る", key=f"det_btn_{start+idx}_{case_id}", use_container_width=True):
+                                st.session_state["selected_case_id"] = case_id
+                                st.rerun()
+                            card_idx += 1
+            
+            # ページネーションボタン
+            if total_pages > 1:
+                st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+                p_cols = st.columns([1, 2, 1])
+                with p_cols[0]:
+                    if page > 0:
+                        if st.button("← 前のページ", use_container_width=True):
+                            st.session_state["page"] = page - 1
+                            st.rerun()
+                with p_cols[1]:
+                    st.markdown(
+                        f"<p style='text-align:center;color:#94a3b8;font-size:14px;padding-top:8px'>{page+1} / {total_pages} ページ</p>",
+                        unsafe_allow_html=True
+                    )
+                with p_cols[2]:
+                    if page < total_pages - 1:
+                        if st.button("次のページ →", use_container_width=True):
+                            st.session_state["page"] = page + 1
+                            st.rerun()
         else:
             st.markdown(
                 '<div class="empty"><h2>一致する事例が見つかりませんでした。</h2>'
