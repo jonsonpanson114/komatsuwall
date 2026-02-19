@@ -588,7 +588,7 @@ def render_hero():
     <p class="hero-subhead">製品名でも、雰囲気でも。<br>
     イメージするだけで、理想の施工事例に出会えます。</p>
 </div>
-"""),
+""").strip(),
         unsafe_allow_html=True,
     )
 
@@ -694,7 +694,7 @@ def render_card(r: dict, card_index: int = 0, show_score: bool = True):
         <p class="desc">{desc}</p>
     </div>
 </div>
-"""),
+""").strip(),
         unsafe_allow_html=True,
     )
 
@@ -706,7 +706,7 @@ def render_results(results: list[dict], query: str):
     <span class="r-count">{len(results)}件の施工事例</span>
     <span class="r-query">{query}</span>
 </div>
-"""),
+""").strip(),
         unsafe_allow_html=True,
     )
 
@@ -760,7 +760,7 @@ def render_pipeline():
     <h4>{title}</h4>
     <p>{desc}</p>
 </div>
-"""),
+""").strip(),
                 unsafe_allow_html=True,
             )
 
@@ -795,7 +795,7 @@ def render_footer():
 <div class="site-footer">
     <p>Komatsu Wall &mdash; Gemini Embedding &amp; ChromaDB</p>
 </div>
-"""),
+""").strip(),
         unsafe_allow_html=True,
     )
 
@@ -946,7 +946,7 @@ def render_detail_view(case_id: str):
         {loc_html}
         {badges_html}
     </div>
-"""), unsafe_allow_html=True)
+""").strip(), unsafe_allow_html=True)
 
     # Main Image (First one)
     image_paths = case.get("local_image_paths", [])
@@ -1171,7 +1171,7 @@ def main():
     <span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
     <span class="r-query">{mode_title}</span>
 </div>
-"""),
+""").strip(),
                 unsafe_allow_html=True,
             )
             
