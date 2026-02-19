@@ -1046,6 +1046,8 @@ def main():
             st.session_state["page"] = 0
             st.rerun()
         for prod in products:
+            if not prod.strip():  # 空文字列はスキップ
+                continue
             label = f"✓ {prod}" if st.session_state["browse_product"] == prod else prod
             if st.button(label, use_container_width=True, key=f"prod_{prod}"):
                 st.session_state["browse_product"] = prod
