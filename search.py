@@ -258,9 +258,8 @@ def get_similar_by_id(case_id: str, n_results: int = 6) -> list[dict]:
 def get_all_items(n_results: int = 300) -> list[dict]:
     """
     インデックスされている全ての（または指定数の）データを取得する。
-    デフォルトの表示や「全件表示」に使用。
+    デフォルトの表示や「全件表示」に使用。APIキー不要（ChromaDB読み込みのみ）。
     """
-    configure_api()
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     collection = client.get_collection(COLLECTION_NAME)
     
