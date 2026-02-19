@@ -1034,6 +1034,24 @@ def main():
         st.session_state["search_query"] = ""
     if "page" not in st.session_state:
         st.session_state["page"] = 0
+    if "browse_product" not in st.session_state:
+        st.session_state["browse_product"] = ""
+
+    # サイドバー — 製品ブラウズ
+    _, products = load_filter_options()
+    with st.sidebar:
+        st.markdown("### 🖌 製品で絞り込む")
+        if st.button("(すべて)", use_container_width=True, key="prod_all"):
+            st.session_state["browse_product"] = ""
+            st.session_state["page"] = 0
+            st.rerun()
+        for prod in products:
+            label = f"✓ {prod}" if st.session_state["browse_product"] == prod else prod
+            if st.button(label, use_container_width=True, key=f"prod_{prod}"):
+                st.session_state["browse_product"] = prod
+                st.session_state["page"] = 0
+                st.rerun()
+
 
     # Detail View Rendering
     if st.session_state["selected_case_id"]:
@@ -1122,14 +1140,22 @@ def main():
     if results:
         # Python側でフィルタリング
         filtered_results = []
+        browse_prod = st.session_state.get("browse_product", "")
         for r in results:
             if sel_locations and r.get("location") not in sel_locations:
                 continue
+            # 製品フィルタ（フォームからの選択）
             if sel_products:
                 r_prods = r.get("products", "").split("、")
                 if not any(sp in r_prods for sp in sel_products):
                     continue
+            # サイドバーからの製品絞り込み
+            if browse_prod:
+                r_prods = r.get("products", "").split("、")
+                if browse_prod not in r_prods:
+                    continue
             filtered_results.append(r)
+
         
         total = len(filtered_results)
         total_pages = max(1, (total + PAGE_SIZE - 1) // PAGE_SIZE)
