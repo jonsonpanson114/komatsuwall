@@ -638,12 +638,9 @@ def fix_path(path: str) -> str:
     # Fallback: if it's already a filename or relative
     return p
 
-def render_card(r: dict, card_index: int = 0):
+def render_card(r: dict, card_index: int = 0, show_score: bool = True):
     raw_path = r.get("image_path", "")
     path = fix_path(raw_path)
-    
-    # Debug info (optional, remove in prod if noisy)
-    # st.write(f"Fixed: {path}")
 
     if path and Path(path).exists():
         b64 = img_b64(path)
@@ -666,9 +663,8 @@ def render_card(r: dict, card_index: int = 0):
         else:
             thumb = '<div class="thumb-empty"></div>'
 
-
-    dist = r.get("distance", 1.0)
-    pct = max(0, int((1 - dist) * 100))
+    dist = r.get("distance", 0.0)
+    pct = max(0, int((1 - dist) * 100)) if show_score and dist > 0 else 0
 
     # Score bar — warm gradient
     if pct >= 80:
@@ -681,17 +677,20 @@ def render_card(r: dict, card_index: int = 0):
     name = r.get("project_name", "")
     products = r.get("products", "")
     desc = truncate(r.get("description", ""), 140)
-    # URL link removed in favor of in-app detail view
+
+    # マッチ率バッジは検索時のみ表示
+    match_badge = f'<span class="match-tag">{pct}%</span>' if show_score and pct > 0 else ""
+    score_line = f'<div class="score-line" style="width:{pct}%;background:{bar_bg};"></div>' if show_score and pct > 0 else ""
 
     st.markdown(
         f"""
     <div class="card" style="--i:{card_index}">
         <div class="thumb-wrap">
             {thumb}
-            <div class="score-line" style="width:{pct}%;background:{bar_bg};"></div>
+            {score_line}
         </div>
         <div class="meta">
-            <p class="name">{name}<span class="match-tag">{pct}%</span></p>
+            <p class="name">{name}{match_badge}</p>
             <p class="products">{products}</p>
             <p class="desc">{desc}</p>
         </div>
@@ -699,6 +698,7 @@ def render_card(r: dict, card_index: int = 0):
     """,
         unsafe_allow_html=True,
     )
+
 
 
 def render_results(results: list[dict], query: str):
@@ -981,12 +981,18 @@ def render_detail_view(case_id: str):
 
     st.markdown("---")
     
-    # Similar Search Button
+    # Similar Search Button and original URL
     st.markdown("### この事例にピンときたら")
-    if st.button("🔍 この事例に似た案件を探す (More Like This)", type="primary", use_container_width=True):
-        st.session_state["similar_query_id"] = case_id
-        del st.session_state["selected_case_id"] # 詳細ビューを閉じる
-        st.rerun()
+    url = case.get("url", "")
+    btn_cols = st.columns([2, 1])
+    with btn_cols[0]:
+        if st.button("🔍 この事例に似た案件を探す (More Like This)", type="primary", use_container_width=True):
+            st.session_state["similar_query_id"] = case_id
+            del st.session_state["selected_case_id"]
+            st.rerun()
+    with btn_cols[1]:
+        if url:
+            st.link_button("🔗 元の施工事例ページ", url, use_container_width=True)
 
 
 # ─── Main ───────────────────────────────────────────────
@@ -1115,6 +1121,7 @@ def main():
             )
             
             # カード表示
+            is_search = bool(query or st.session_state.get("similar_query_id"))
             card_idx = 0
             for row in range(0, len(display_results), 3):
                 cols = st.columns(3, gap="medium")
@@ -1124,7 +1131,7 @@ def main():
                         r = display_results[idx]
                         case_id = r.get("case_id")
                         with col:
-                            render_card(r, card_index=card_idx)
+                            render_card(r, card_index=card_idx, show_score=is_search)
                             if st.button("詳細を見る", key=f"det_btn_{start+idx}_{case_id}", use_container_width=True):
                                 st.session_state["selected_case_id"] = case_id
                                 st.rerun()
