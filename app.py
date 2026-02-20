@@ -822,8 +822,37 @@ def index_ready() -> bool:
 # ─── Data Loading ───────────────────────────────────────
 
 @st.cache_data
+
+def get_product_group(product_name: str) -> str:
+    """製品名をシリーズやカテゴリでグルーピングする"""
+    p = product_name.strip()
+    if not p:
+        return ""
+    
+    # シリーズ・カテゴリ定義
+    if "マイティ" in p:
+        return "マイティシリーズ"
+    if "カームドア" in p or "カーム" in p:  # カーム、カームドア
+        return "カームドアシリーズ"
+    if "ランニング" in p:
+        return "ランニングシリーズ"
+    if "ハッピー" in p:
+        return "ハッピーシリーズ"
+    if "サニティ" in p or "プレブース" in p or "トイレ" in p:
+        return "トイレブース"
+    if "移動壁" in p:
+        return "移動壁"
+    if "スライディング" in p:
+        return "スライディングドア"
+    if "間仕切" in p or "パーティション" in p:
+        return "間仕切・パーティション"
+        
+    return "その他"
+
+
+@st.cache_data
 def load_filter_options():
-    """raw_data.jsonからフィルタリング用の選択肢を作成（地方ブロックグルーピング付き）"""
+    """raw_data.jsonからフィルタリング用の選択肢を作成（地方・製品グルーピング付き）"""
     REGION_MAP = {
         "北海道": "北海道・東北",
         "青森県": "北海道・東北", "岩手県": "北海道・東北", "宮城県": "北海道・東北",
@@ -844,7 +873,7 @@ def load_filter_options():
     
     raw_path = Path(__file__).parent / "data" / "raw_data.json"
     locations = set()
-    products = set()
+    product_groups = set()
     
     if raw_path.exists():
         try:
@@ -854,17 +883,25 @@ def load_filter_options():
                     if item.get("location"):
                         locations.add(item["location"])
                     for p in item.get("products", []):
-                        products.add(p)
+                        group = get_product_group(p)
+                        if group and group != "その他": # "その他"はリストに出さない方がきれいかも？いったん出すか。
+                            product_groups.add(group)
         except Exception:
             pass
     
     # 地方ブロックグルーピング
-    grouped = {}
+    grouped_loc = {}
     for loc in sorted(locations):
         region = REGION_MAP.get(loc, "その他")
-        grouped.setdefault(region, []).append(loc)
+        grouped_loc.setdefault(region, []).append(loc)
     
-    return grouped, sorted(list(products))
+    # "その他" をリストの最後に持っていく、あるいは除外する
+    sorted_groups = sorted(list(product_groups))
+    if "その他" in sorted_groups:
+        sorted_groups.remove("その他")
+        # sorted_groups.append("その他") # あえてサイドバーには表示しない
+    
+    return grouped_loc, sorted_groups
 
 
 @st.cache_data(ttl=3600)  # 1時間キャッシュ
@@ -1146,12 +1183,12 @@ def main():
             # 製品フィルタ（フォームからの選択）
             if sel_products:
                 r_prods = r.get("products", "").split("、")
-                if not any(sp in r_prods for sp in sel_products):
+                if not any(get_product_group(p) in sel_products for p in r_prods):
                     continue
             # サイドバーからの製品絞り込み
             if browse_prod:
                 r_prods = r.get("products", "").split("、")
-                if browse_prod not in r_prods:
+                if not any(get_product_group(p) == browse_prod for p in r_prods):
                     continue
             filtered_results.append(r)
 
