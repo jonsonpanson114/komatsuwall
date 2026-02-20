@@ -623,20 +623,24 @@ def render_search():
 def fix_path(path: str) -> str:
     """
     Fix absolute Windows paths to relative Linux-friendly paths for Streamlit Cloud.
-    Converts 'c:\\Users\\...\\data\\images\\xxx.jpg' -> 'data/images/xxx.jpg'
+    Converts 'c:\\Users\\...\\data\\images\\xxx.jpg' -> absolute path
     """
     if not path:
         return ""
     
     # Standardize separators
     p = path.replace("\\", "/")
+    from pathlib import Path
+    base_dir = Path(__file__).parent
     
     # If it contains 'data/images', slice from there
     if "data/images" in p:
-        return p[p.find("data/images"):]
+        rel_path = p[p.find("data/images"):]
+        return str(base_dir / rel_path)
         
-    # Fallback: if it's already a filename or relative
-    return p
+    # Fallback to pure filename extraction if all else fails
+    filename = p.split("/")[-1]
+    return str(base_dir / "data" / "images" / filename)
 
 def render_card(r: dict, card_index: int = 0, show_score: bool = True):
     raw_path = r.get("image_path", "")
@@ -650,9 +654,9 @@ def render_card(r: dict, card_index: int = 0, show_score: bool = True):
             else '<div class="thumb-empty"></div>'
         )
     else:
-        # Check if we can find it in 'data/images' by filename
-        filename = Path(raw_path).name
-        alt_path = f"data/images/{filename}"
+        # Check if we can find it by just the filename part
+        filename = raw_path.replace("\\", "/").split("/")[-1]
+        alt_path = str(Path(__file__).parent / "data" / "images" / filename)
         if Path(alt_path).exists():
              b64 = img_b64(alt_path)
              thumb = (
