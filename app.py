@@ -803,13 +803,15 @@ def render_footer():
 # ─── State ──────────────────────────────────────────────
 
 
+import logging
+
 def index_ready() -> bool:
     try:
         from search import ensure_local_index
         ensure_local_index()
         return True
     except Exception as e:
-        print("[App] index_ready check failed:", e)
+        logging.error(f"[App] index_ready check failed: {e}")
         return False
 
 

@@ -22,6 +22,8 @@ COLLECTION_NAME = "komatsu_cases"
 EMBEDDING_MODEL = "models/gemini-embedding-001"
 
 
+import logging
+
 def ensure_local_index() -> None:
     """Windows/Linuxの互換性対策: ローカルDBが正常でなければエクスポート済みのJSONから即座に再構築する"""
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
@@ -35,10 +37,10 @@ def ensure_local_index() -> None:
                 col.get(limit=1, include=["metadatas"])
                 return
     except Exception as e:
-        print("[Search] Check failed:", e)
+        logging.error(f"[Search] Check failed: {e}")
         pass
         
-    print("[Search] 互換性エラーまたはローカルDB未構築を検知。エクスポートデータから復元します...")
+    logging.info("[Search] 互換性エラーまたはローカルDB未構築を検知。エクスポートデータから復元します...")
     
     try:
         # Try to delete if it exists, ignore if it fails or doesn't exist
@@ -55,7 +57,7 @@ def ensure_local_index() -> None:
             # Re-initialize client after wiping directory
             client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     except Exception as wipe_e:
-        print("[Search] Failed to wipe DB dir:", wipe_e)
+        logging.error(f"[Search] Failed to wipe DB dir: {wipe_e}")
 
     EXPORT_PATH = DATA_DIR / "chroma_export.json"
     if not EXPORT_PATH.exists():
@@ -82,7 +84,7 @@ def ensure_local_index() -> None:
             metadatas=metadatas[i:i+batch_size],
             embeddings=embeddings[i:i+batch_size]
         )
-    print(f"[Search] {len(records)}件のインデックスを復元完了。")
+    logging.info(f"[Search] {len(records)}件のインデックスを復元完了。")
 
 
 def configure_api():
