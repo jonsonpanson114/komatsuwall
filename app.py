@@ -804,19 +804,13 @@ def render_footer():
 
 
 def index_ready() -> bool:
-    db = Path(__file__).parent / "data" / "chroma_db_v2"
-    if not db.exists():
-        return False
     try:
-        import chromadb
-
-        client = chromadb.PersistentClient(path=str(db))
-        names = [c.name for c in client.list_collections()]
-        if "komatsu_cases" in names:
-            return client.get_collection("komatsu_cases").count() > 0
-    except Exception:
-        pass
-    return False
+        from search import ensure_local_index
+        ensure_local_index()
+        return True
+    except Exception as e:
+        print("[App] index_ready check failed:", e)
+        return False
 
 
 # ─── Data Loading ───────────────────────────────────────

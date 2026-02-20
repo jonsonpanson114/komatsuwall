@@ -24,6 +24,56 @@ COLLECTION_NAME = "komatsu_cases"
 EMBEDDING_MODEL = "models/gemini-embedding-001"
 
 
+def ensure_local_index() -> None:
+    """Windows/Linuxの互換性対策: ローカルDBが正常でなければエクスポート済みのJSONから即座に再構築する"""
+    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    
+    try:
+        if COLLECTION_NAME in [c.name for c in client.list_collections()]:
+            col = client.get_collection(COLLECTION_NAME)
+            if col.count() > 0:
+                # Test read to catch Rust panic on Linux
+                col.get(limit=1, include=["metadatas"])
+                return
+    except Exception:
+        pass
+        
+    print("[Search] 互換性エラーまたはローカルDB未構築を検知。エクスポートデータから復元します...")
+    
+    try:
+        if COLLECTION_NAME in [c.name for c in client.list_collections()]:
+            client.delete_collection(COLLECTION_NAME)
+    except Exception:
+        pass
+
+    EXPORT_PATH = DATA_DIR / "chroma_export.json"
+    if not EXPORT_PATH.exists():
+        raise RuntimeError(f"復元ファイル {EXPORT_PATH} が存在しません。")
+        
+    with open(EXPORT_PATH, "r", encoding="utf-8") as f:
+        records = json.load(f)
+        
+    col = client.create_collection(
+        name=COLLECTION_NAME,
+        metadata={"hnsw:space": "cosine"},
+    )
+    
+    ids = [str(r["id"]) for r in records]
+    documents = [r["document"] for r in records]
+    metadatas = [r["metadata"] for r in records]
+    embeddings = [r["embedding"] for r in records]
+    
+    batch_size = 200
+    for i in range(0, len(ids), batch_size):
+        col.add(
+            ids=ids[i:i+batch_size],
+            documents=documents[i:i+batch_size],
+            metadatas=metadatas[i:i+batch_size],
+            embeddings=embeddings[i:i+batch_size]
+        )
+    print(f"[Search] {len(records)}件のインデックスを復元完了。")
+
+
 def configure_api():
     api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
     if not api_key:
