@@ -12,8 +12,6 @@ from dotenv import load_dotenv
 import chromadb
 import google.generativeai as genai
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-
 load_dotenv()
 
 DATA_DIR = Path(__file__).parent / "data"
