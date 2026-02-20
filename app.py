@@ -836,8 +836,6 @@ def get_product_group(product_name: str) -> str:
         return "カームドアシリーズ"
     if "ランニング" in p:
         return "ランニングシリーズ"
-    if "ハッピー" in p:
-        return "ハッピーシリーズ"
     if "サニティ" in p or "プレブース" in p or "トイレ" in p:
         return "トイレブース"
     if "移動壁" in p:
