@@ -29,22 +29,35 @@ def ensure_local_index() -> None:
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
     
     try:
+        # DB is completely broken on Linux -> list_collections might raise exception
         if COLLECTION_NAME in [c.name for c in client.list_collections()]:
             col = client.get_collection(COLLECTION_NAME)
             if col.count() > 0:
                 # Test read to catch Rust panic on Linux
                 col.get(limit=1, include=["metadatas"])
                 return
-    except Exception:
+    except Exception as e:
+        print("[Search] Check failed:", e)
         pass
         
     print("[Search] 互換性エラーまたはローカルDB未構築を検知。エクスポートデータから復元します...")
     
     try:
-        if COLLECTION_NAME in [c.name for c in client.list_collections()]:
-            client.delete_collection(COLLECTION_NAME)
+        # Try to delete if it exists, ignore if it fails or doesn't exist
+        client.delete_collection(COLLECTION_NAME)
     except Exception:
         pass
+    
+    # Alternatively, completely wipe the chroma directory to be safe
+    import shutil
+    try:
+        if CHROMA_DIR.exists():
+            shutil.rmtree(CHROMA_DIR)
+            CHROMA_DIR.mkdir(parents=True, exist_ok=True)
+            # Re-initialize client after wiping directory
+            client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    except Exception as wipe_e:
+        print("[Search] Failed to wipe DB dir:", wipe_e)
 
     EXPORT_PATH = DATA_DIR / "chroma_export.json"
     if not EXPORT_PATH.exists():
