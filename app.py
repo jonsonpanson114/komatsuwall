@@ -823,9 +823,11 @@ def index_ready() -> bool:
 
 @st.cache_data
 
-def get_product_group(product_name: str) -> str:
+def get_product_group(product_name) -> str:
     """製品名をシリーズやカテゴリでグルーピングする"""
-    p = product_name.strip()
+    if not product_name:
+        return ""
+    p = str(product_name).strip()
     if not p:
         return ""
     
@@ -1180,12 +1182,12 @@ def main():
                 continue
             # 製品フィルタ（フォームからの選択）
             if sel_products:
-                r_prods = r.get("products", "").split("、")
+                r_prods = (r.get("products") or "").split("、")
                 if not any(get_product_group(p) in sel_products for p in r_prods):
                     continue
             # サイドバーからの製品絞り込み
             if browse_prod:
-                r_prods = r.get("products", "").split("、")
+                r_prods = (r.get("products") or "").split("、")
                 if not any(get_product_group(p) == browse_prod for p in r_prods):
                     continue
             filtered_results.append(r)
