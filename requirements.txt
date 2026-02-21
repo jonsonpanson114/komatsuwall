@@ -1,5 +1,5 @@
-streamlit
-python-dotenv
-google-generativeai
-chromadb
-Pillow
+streamlit==1.54.0
+python-dotenv==1.2.1
+google-generativeai==0.8.6
+chromadb==1.4.1
+Pillow==12.1.0
