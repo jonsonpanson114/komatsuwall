@@ -24,65 +24,80 @@ EMBEDDING_MODEL = "models/gemini-embedding-001"
 
 import logging
 
-def ensure_local_index() -> None:
-    """Windows/Linuxの互換性対策: ローカルDBが正常でなければエクスポート済みのJSONから即座に再構築する"""
+def get_chroma_client():
+    """安全にChromaDBクライアントを取得する。エラー時は自動修復を試みる。"""
     try:
         client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-        # DB is completely broken on Linux -> list_collections might raise exception
-        if COLLECTION_NAME in [c.name for c in client.list_collections()]:
-            col = client.get_collection(COLLECTION_NAME)
-            if col.count() > 0:
-                # Test read to catch Rust panic on Linux
-                col.get(limit=1, include=["metadatas"])
-                return False
+        # 疎通確認: list_collectionsが通ればOK (Rust panic対策)
+        client.list_collections()
+        return client
     except Exception as e:
-        logging.error(f"[Search] Initial check failed: {e}")
+        logging.error(f"[Search] Chroma Client initialization failed: {e}")
+        logging.info("[Search] データベースの不整合を検知。修復（再構築）を開始します...")
+        
+        # 物理的に一度消去する
+        import shutil
+        try:
+            if CHROMA_DIR.exists():
+                shutil.rmtree(CHROMA_DIR, ignore_errors=True)
+            CHROMA_DIR.mkdir(parents=True, exist_ok=True)
+        except Exception as wipe_e:
+            logging.error(f"[Search] Failed to wipe corrupted DB: {wipe_e}")
+
+        # 再構築用のデータソース確認
+        EXPORT_PATH = DATA_DIR / "chroma_export.json"
+        if not EXPORT_PATH.exists():
+            logging.error("[Search] 復元用ファイルが見つかりません。インメモリで動作します。")
+            return chromadb.EphemeralClient()
+
+        # クライアント再生成
+        try:
+            client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+        except Exception:
+            logging.error("[Search] PersistentClientの再生成に失敗。インメモリへフォールバックします。")
+            client = chromadb.EphemeralClient()
+
+        # インデックス復元
+        try:
+            with open(EXPORT_PATH, "r", encoding="utf-8") as f:
+                records = json.load(f)
+            
+            col = client.get_or_create_collection(
+                name=COLLECTION_NAME,
+                metadata={"hnsw:space": "cosine"},
+            )
+            
+            ids = [str(r["id"]) for r in records]
+            documents = [r["document"] for r in records]
+            metadatas = [r["metadata"] for r in records]
+            embeddings = [r["embedding"] for r in records]
+            
+            batch_size = 200
+            for i in range(0, len(ids), batch_size):
+                col.add(
+                    ids=ids[i:i+batch_size],
+                    documents=documents[i:i+batch_size],
+                    metadatas=metadatas[i:i+batch_size],
+                    embeddings=embeddings[i:i+batch_size]
+                )
+            logging.info(f"[Search] {len(records)}件のデータを正常に復元しました。")
+        except Exception as rebuild_e:
+            logging.error(f"[Search] Restore failed: {rebuild_e}")
+        
+        return client
+
+def ensure_local_index() -> bool:
+    """初期化チェック用 (app.pyから呼ばれる)"""
+    client = get_chroma_client()
+    try:
+        col = client.get_collection(COLLECTION_NAME)
+        if col.count() > 0:
+            return False # すでに正常（再構築不要）
+    except Exception:
         pass
-        
-    logging.info("[Search] 互換性エラーまたはローカルDB未構築を検知。復活の儀式を開始します...")
     
-    # Alternatively, completely wipe the chroma directory to be safe
-    import shutil
-    try:
-        if CHROMA_DIR.exists():
-            shutil.rmtree(CHROMA_DIR, ignore_errors=True)
-        CHROMA_DIR.mkdir(parents=True, exist_ok=True)
-    except Exception as wipe_e:
-        logging.error(f"[Search] Failed to wipe DB dir: {wipe_e}")
-
-    try:
-        client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-    except Exception as client_e:
-        logging.error(f"[Search] Failed to re-init client: {client_e}")
-        # Final fallback: In-memory DB
-        client = chromadb.EphemeralClient()
-
-    EXPORT_PATH = DATA_DIR / "chroma_export.json"
-    if not EXPORT_PATH.exists():
-        raise RuntimeError(f"復元用ファイル {EXPORT_PATH} が存在しません。デプロイを確認してください。")
-        
-    with open(EXPORT_PATH, "r", encoding="utf-8") as f:
-        records = json.load(f)
-        
-    col = client.get_or_create_collection(
-        name=COLLECTION_NAME,
-        metadata={"hnsw:space": "cosine"},
-    )
-    
-    ids = [str(r["id"]) for r in records]
-    documents = [r["document"] for r in records]
-    metadatas = [r["metadata"] for r in records]
-    embeddings = [r["embedding"] for r in records]
-    
-    batch_size = 200
-    for i in range(0, len(ids), batch_size):
-        col.add(
-            ids=ids[i:i+batch_size],
-            documents=documents[i:i+batch_size],
-            metadatas=metadatas[i:i+batch_size],
-            embeddings=embeddings[i:i+batch_size]
-        )
-    logging.info(f"[Search] {len(records)}件のインデックスを正常に復元しました。")
+    # ここに来るということは再構築が必要か、あるいは修復済み
+    # get_chroma_client内部で修復が行われるため、ここでは成功を祈る
     return True
 
 
@@ -190,10 +205,11 @@ def build_index() -> chromadb.Collection:
     return collection
 
 
-def search(query: str, n_results: int = 12) -> list[dict]:
+def search(query: str, n_results: int = 300) -> list[dict]:
+    """自然言語で検索。類似度の高い事例を deduplicated（case_id単位）で返す。"""
     configure_api()
 
-    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    client = get_chroma_client()
     existing = [c.name for c in client.list_collections()]
     if COLLECTION_NAME not in existing:
         raise RuntimeError("インデックスが未構築です。先にインデックスを構築してください。")
@@ -251,7 +267,7 @@ def get_similar_by_id(case_id: str, n_results: int = 6) -> list[dict]:
     """
     指定された case_id のベクトルを使って類似案件を検索する (More Like This)
     """
-    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    client = get_chroma_client()
     collection = client.get_collection(COLLECTION_NAME)
 
     # まず対象のドキュメント（Embedding）を取得
@@ -322,7 +338,7 @@ def get_all_items(n_results: int = 300) -> list[dict]:
     インデックスされている全ての（または指定数の）データを取得する。
     デフォルトの表示や「全件表示」に使用。APIキー不要（ChromaDB読み込みのみ）。
     """
-    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    client = get_chroma_client()
     collection = client.get_collection(COLLECTION_NAME)
     
     # peekだとランダムではないが、全件取得には使える
