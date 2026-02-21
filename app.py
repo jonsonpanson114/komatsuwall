@@ -11,6 +11,7 @@ from pathlib import Path
 
 import streamlit as st
 from dotenv import load_dotenv
+import logging
 from PIL import Image
 
 load_dotenv()
@@ -632,7 +633,7 @@ def fix_path(path: str) -> str:
     # Standardize separators
     p = path.replace("\\", "/")
     from pathlib import Path
-    base_dir = Path(__file__).parent
+    base_dir = Path(__file__).resolve().parent
     
     # If it contains 'data/images', slice from there
     if "data/images" in p:
@@ -1151,10 +1152,10 @@ def main():
 
     if st.session_state["similar_query_id"]:
         with st.spinner("類似案件を探しています..."):
-                from search import get_similar_by_id
-                # 類似検索実行
-                sim_id = st.session_state["similar_query_id"]
-                results = get_similar_by_id(sim_id, n_results=100)
+            from search import get_similar_by_id
+            # 類似検索実行
+            sim_id = st.session_state["similar_query_id"]
+            results = get_similar_by_id(sim_id, n_results=100)
                 
                 # ケースマップからプロジェクト名を取得して表示
                 case_map = load_case_map()
@@ -1169,14 +1170,14 @@ def main():
 
     elif query:
         with st.spinner(""):
-                results = cached_search(query)
-                mode_title = f"「{query}」"
+            results = cached_search(query)
+            mode_title = f"「{query}」"
     
     else:
         # Query is empty: Show ALL items
         with st.spinner("一覧を読み込み中…"):
-                results = cached_get_all_items()
-                mode_title = "すべての施工事例"
+            results = cached_get_all_items()
+            mode_title = "すべての施工事例"
 
     # Filtering (共通)
     if results:
