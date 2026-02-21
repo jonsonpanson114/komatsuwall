@@ -111,7 +111,6 @@ def get_embedding(text: str) -> list[float]:
     result = genai.embed_content(
         model=EMBEDDING_MODEL,
         content=text,
-        task_type="retrieval_document",
     )
     return result["embedding"]
 
@@ -120,7 +119,6 @@ def get_query_embedding(text: str) -> list[float]:
     result = genai.embed_content(
         model=EMBEDDING_MODEL,
         content=text,
-        task_type="retrieval_document",
     )
     return result["embedding"]
 
