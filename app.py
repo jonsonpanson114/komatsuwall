@@ -1157,16 +1157,16 @@ def main():
             sim_id = st.session_state["similar_query_id"]
             results = get_similar_by_id(sim_id, n_results=100)
                 
-                # ケースマップからプロジェクト名を取得して表示
-                case_map = load_case_map()
-                original_case = case_map.get(sim_id)
-                p_name = original_case.get("project_name", "選択した事例") if original_case else "選択した事例"
-                mode_title = f"「{p_name}」に似た事例"
-                
-                if query and query != initial_query: # ユーザーが何か入力したら類似検索モード解除
-                    st.session_state["similar_query_id"] = None
-                    st.session_state["search_query"] = query
-                    st.rerun()
+            # ケースマップからプロジェクト名を取得して表示
+            case_map = load_case_map()
+            original_case = case_map.get(sim_id)
+            p_name = original_case.get("project_name", "選択した事例") if original_case else "選択した事例"
+            mode_title = f"「{p_name}」に似た事例"
+            
+            if query and query != initial_query: # ユーザーが何か入力したら類似検索モード解除
+                st.session_state["similar_query_id"] = None
+                st.session_state["search_query"] = query
+                st.rerun()
 
     elif query:
         with st.spinner(""):
