@@ -2,10 +2,8 @@
 ChromaDB + Gemini Embedding によるベクトル検索モジュール。
 """
 
-import io
 import json
 import os
-import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -24,18 +22,45 @@ EMBEDDING_MODEL = "models/gemini-embedding-001"
 
 import logging
 
+def _rebuild_from_export(client) -> None:
+    """chroma_export.json からコレクションを再構築する共通ヘルパー。"""
+    EXPORT_PATH = DATA_DIR / "chroma_export.json"
+    if not EXPORT_PATH.exists():
+        logging.error("[Search] 復元用ファイルが見つかりません。検索は利用できません。")
+        return
+    try:
+        with open(EXPORT_PATH, "r", encoding="utf-8") as f:
+            records = json.load(f)
+        col = client.get_or_create_collection(
+            name=COLLECTION_NAME,
+            metadata={"hnsw:space": "cosine"},
+        )
+        ids = [str(r["id"]) for r in records]
+        documents = [r["document"] for r in records]
+        metadatas = [r["metadata"] for r in records]
+        embeddings = [r["embedding"] for r in records]
+        batch_size = 200
+        for i in range(0, len(ids), batch_size):
+            col.add(
+                ids=ids[i:i+batch_size],
+                documents=documents[i:i+batch_size],
+                metadatas=metadatas[i:i+batch_size],
+                embeddings=embeddings[i:i+batch_size],
+            )
+        logging.info(f"[Search] {len(records)}件のデータを正常に復元しました。")
+    except Exception as rebuild_e:
+        logging.error(f"[Search] Restore failed: {rebuild_e}")
+
+
 def get_chroma_client():
     """安全にChromaDBクライアントを取得する。エラー時は自動修復を試みる。"""
     try:
         client = chromadb.PersistentClient(path=str(CHROMA_DIR))
         # 疎通確認: list_collectionsが通ればOK (Rust panic対策)
         client.list_collections()
-        return client
     except Exception as e:
+        # クライアント作成 or list_collections に失敗 → DB破損の可能性。wipして再構築。
         logging.error(f"[Search] Chroma Client initialization failed: {e}")
-        logging.info("[Search] データベースの不整合を検知。修復（再構築）を開始します...")
-        
-        # 物理的に一度消去する
         import shutil
         try:
             if CHROMA_DIR.exists():
@@ -43,48 +68,20 @@ def get_chroma_client():
             CHROMA_DIR.mkdir(parents=True, exist_ok=True)
         except Exception as wipe_e:
             logging.error(f"[Search] Failed to wipe corrupted DB: {wipe_e}")
-
-        # 再構築用のデータソース確認
-        EXPORT_PATH = DATA_DIR / "chroma_export.json"
-        if not EXPORT_PATH.exists():
-            logging.error("[Search] 復元用ファイルが見つかりません。インメモリで動作します。")
-            return chromadb.EphemeralClient()
-
-        # クライアント再生成
         try:
             client = chromadb.PersistentClient(path=str(CHROMA_DIR))
         except Exception:
-            logging.error("[Search] PersistentClientの再生成に失敗。インメモリへフォールバックします。")
             client = chromadb.EphemeralClient()
-
-        # インデックス復元
-        try:
-            with open(EXPORT_PATH, "r", encoding="utf-8") as f:
-                records = json.load(f)
-            
-            col = client.get_or_create_collection(
-                name=COLLECTION_NAME,
-                metadata={"hnsw:space": "cosine"},
-            )
-            
-            ids = [str(r["id"]) for r in records]
-            documents = [r["document"] for r in records]
-            metadatas = [r["metadata"] for r in records]
-            embeddings = [r["embedding"] for r in records]
-            
-            batch_size = 200
-            for i in range(0, len(ids), batch_size):
-                col.add(
-                    ids=ids[i:i+batch_size],
-                    documents=documents[i:i+batch_size],
-                    metadatas=metadatas[i:i+batch_size],
-                    embeddings=embeddings[i:i+batch_size]
-                )
-            logging.info(f"[Search] {len(records)}件のデータを正常に復元しました。")
-        except Exception as rebuild_e:
-            logging.error(f"[Search] Restore failed: {rebuild_e}")
-        
+        _rebuild_from_export(client)
         return client
+
+    # クライアント作成は成功したが、コレクションが存在しない場合（初回デプロイ等）
+    existing_names = [c.name for c in client.list_collections()]
+    if COLLECTION_NAME not in existing_names:
+        logging.info("[Search] コレクションが存在しません。chroma_export.json から再構築します。")
+        _rebuild_from_export(client)
+
+    return client
 
 def ensure_local_index() -> bool:
     """初期化チェック用 (app.pyから呼ばれる)"""
@@ -351,9 +348,8 @@ def get_all_items(n_results: int = 300) -> list[dict]:
         include=["documents", "metadatas"]
     )
     
-    search_results = []
     unique_cases = {}
-    
+
     if results and results["ids"]:
         for i, doc_id in enumerate(results["ids"]):
             meta = results["metadatas"][i]
