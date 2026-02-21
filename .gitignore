@@ -2,6 +2,7 @@
 # Python
 __pycache__/
 data/chroma_db_v2/
+data/chroma_db_v2_backup/
 *.py[cod]
 *$py.class
 
