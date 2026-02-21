@@ -108,19 +108,35 @@ def configure_api():
 
 
 def get_embedding(text: str) -> list[float]:
-    result = genai.embed_content(
-        model=EMBEDDING_MODEL,
-        content=text,
-    )
-    return result["embedding"]
-
+    try:
+        result = genai.embed_content(
+            model=EMBEDDING_MODEL,
+            content=text,
+            task_type="retrieval_document",
+        )
+        return result["embedding"]
+    except Exception as e:
+        logging.error(f"[Search] Embedding creation failed: {e}")
+        raise e
 
 def get_query_embedding(text: str) -> list[float]:
-    result = genai.embed_content(
-        model=EMBEDDING_MODEL,
-        content=text,
-    )
-    return result["embedding"]
+    try:
+        # 特殊な文字や空文字のガード
+        if not text or not text.strip():
+             # 空のクエリなら適当なベクトルを返すか、エラーにする
+             # ここでは空文字検索は上位で弾かれるはずだが一応
+             return [0.0] * 768
+
+        result = genai.embed_content(
+            model=EMBEDDING_MODEL,
+            content=text,
+            task_type="retrieval_query",
+        )
+        return result["embedding"]
+    except Exception as e:
+        logging.error(f"[Search] Query embedding failed: {e}")
+        # 詳細なエラー情報を付与して再送
+        raise RuntimeError(f"Google Gemini Embedding Error: {str(e)}")
 
 
 def build_index() -> chromadb.Collection:

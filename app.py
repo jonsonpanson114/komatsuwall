@@ -595,30 +595,7 @@ def render_hero():
     )
 
 
-def render_search():
-    query = st.text_input(
-        "search",
-        placeholder="明るく開放的なオフィス、木目調の温かい空間…",
-        key="search_query",
-        label_visibility="collapsed",
-    )
-
-    suggestions = [
-        "開放的なオフィス",
-        "和モダンな内装",
-        "ガラスで仕切られた会議室",
-        "温かみのある木目調",
-        "ホテルライクなロビー",
-        "明るい教室",
-    ]
-    cols = st.columns(len(suggestions))
-    for i, s in enumerate(suggestions):
-        with cols[i]:
-            if st.button(s, key=f"sg_{i}"):
-                st.session_state["search_query"] = s
-                st.rerun()
-
-    return query
+# Removed redundant render_search as render_suggestions/main handles it.
 
 
 
@@ -1093,6 +1070,9 @@ def main():
                 st.session_state["page"] = 0
                 st.rerun()
 
+        st.markdown("---")
+        st.session_state["debug_mode"] = st.toggle("🔧 デバッグモード", value=st.session_state.get("debug_mode", False))
+
 
     # Detail View Rendering
     if st.session_state["selected_case_id"]:
@@ -1150,34 +1130,43 @@ def main():
 
     mode_title = ""
 
-    if st.session_state["similar_query_id"]:
-        with st.spinner("類似案件を探しています..."):
-            from search import get_similar_by_id
-            # 類似検索実行
-            sim_id = st.session_state["similar_query_id"]
-            results = get_similar_by_id(sim_id, n_results=100)
+    try:
+        if st.session_state["similar_query_id"]:
+            with st.spinner("類似案件を探しています..."):
+                from search import get_similar_by_id
+                # 類似検索実行
+                sim_id = st.session_state["similar_query_id"]
+                results = get_similar_by_id(sim_id, n_results=100)
+                    
+                # ケースマップからプロジェクト名を取得して表示
+                case_map = load_case_map()
+                original_case = case_map.get(sim_id)
+                p_name = original_case.get("project_name", "選択した事例") if original_case else "選択した事例"
+                mode_title = f"「{p_name}」に似た事例"
                 
-            # ケースマップからプロジェクト名を取得して表示
-            case_map = load_case_map()
-            original_case = case_map.get(sim_id)
-            p_name = original_case.get("project_name", "選択した事例") if original_case else "選択した事例"
-            mode_title = f"「{p_name}」に似た事例"
-            
-            if query and query != initial_query: # ユーザーが何か入力したら類似検索モード解除
-                st.session_state["similar_query_id"] = None
-                st.session_state["search_query"] = query
-                st.rerun()
+                if query and query != initial_query: # ユーザーが何か入力したら類似検索モード解除
+                    st.session_state["similar_query_id"] = None
+                    st.session_state["search_query"] = query
+                    st.rerun()
+        elif query:
+            with st.spinner(""):
+                results = cached_search(query)
+                mode_title = f"「{query}」"
+        else:
+            # Query is empty: Show ALL items
+            with st.spinner("一覧を読み込み中…"):
+                results = cached_get_all_items()
+                mode_title = "すべての施工事例"
 
-    elif query:
-        with st.spinner(""):
-            results = cached_search(query)
-            mode_title = f"「{query}」"
-    
-    else:
-        # Query is empty: Show ALL items
-        with st.spinner("一覧を読み込み中…"):
-            results = cached_get_all_items()
-            mode_title = "すべての施工事例"
+    except Exception as e:
+        st.error("🔍 検索処理中にエラーが発生しました。")
+        if st.session_state.get("debug_mode"):
+            import traceback
+            st.code(traceback.format_exc(), language="python")
+        else:
+            st.info("詳細な情報はサイドバーの「デバッグモード」をONにすると確認できます。")
+        results = []
+        mode_title = "エラー発生"
 
     # Filtering (共通)
     if results:
