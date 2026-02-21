@@ -539,6 +539,7 @@ div[data-testid="stSpinner"] {
 # ─── Utilities ──────────────────────────────────────────
 
 
+@st.cache_data
 def img_b64(path: str, max_width: int = 400) -> str:
     """画像を圧縮してbase64に変換（サムネイル用）"""
     try:
@@ -812,9 +813,12 @@ import logging
 def index_ready() -> bool:
     try:
         from search import ensure_local_index
-        ensure_local_index()
+        rebuilt = ensure_local_index()
+        if rebuilt:
+            st.cache_data.clear()
         return True
     except Exception as e:
+        st.session_state["init_error"] = str(e)
         logging.error(f"[App] index_ready check failed: {e}")
         return False
 
@@ -1136,13 +1140,17 @@ def main():
         with c2:
             sel_products = st.multiselect("製品", products, placeholder="製品名を選択...")
 
-    # Search Logic
-    results = []
+    # チェック
+    if not index_ready():
+        if "init_error" in st.session_state:
+            st.error(f"⚠️ 初期化エラー (準備中): {st.session_state['init_error']}")
+        render_pipeline()
+        return
+
     mode_title = ""
 
     if st.session_state["similar_query_id"]:
-        if index_ready():
-            with st.spinner("類似案件を探しています..."):
+        with st.spinner("類似案件を探しています..."):
                 from search import get_similar_by_id
                 # 類似検索実行
                 sim_id = st.session_state["similar_query_id"]
@@ -1160,15 +1168,13 @@ def main():
                     st.rerun()
 
     elif query:
-        if index_ready():
-            with st.spinner(""):
+        with st.spinner(""):
                 results = cached_search(query)
                 mode_title = f"「{query}」"
     
     else:
         # Query is empty: Show ALL items
-        if index_ready():
-            with st.spinner("一覧を読み込み中…"):
+        with st.spinner("一覧を読み込み中…"):
                 results = cached_get_all_items()
                 mode_title = "すべての施工事例"
 

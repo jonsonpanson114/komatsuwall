@@ -26,47 +26,45 @@ import logging
 
 def ensure_local_index() -> None:
     """Windows/Linuxの互換性対策: ローカルDBが正常でなければエクスポート済みのJSONから即座に再構築する"""
-    client = chromadb.PersistentClient(path=str(CHROMA_DIR))
-    
     try:
+        client = chromadb.PersistentClient(path=str(CHROMA_DIR))
         # DB is completely broken on Linux -> list_collections might raise exception
         if COLLECTION_NAME in [c.name for c in client.list_collections()]:
             col = client.get_collection(COLLECTION_NAME)
             if col.count() > 0:
                 # Test read to catch Rust panic on Linux
                 col.get(limit=1, include=["metadatas"])
-                return
+                return False
     except Exception as e:
-        logging.error(f"[Search] Check failed: {e}")
+        logging.error(f"[Search] Initial check failed: {e}")
         pass
         
-    logging.info("[Search] 互換性エラーまたはローカルDB未構築を検知。エクスポートデータから復元します...")
-    
-    try:
-        # Try to delete if it exists, ignore if it fails or doesn't exist
-        client.delete_collection(COLLECTION_NAME)
-    except Exception:
-        pass
+    logging.info("[Search] 互換性エラーまたはローカルDB未構築を検知。復活の儀式を開始します...")
     
     # Alternatively, completely wipe the chroma directory to be safe
     import shutil
     try:
         if CHROMA_DIR.exists():
-            shutil.rmtree(CHROMA_DIR)
-            CHROMA_DIR.mkdir(parents=True, exist_ok=True)
-            # Re-initialize client after wiping directory
-            client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+            shutil.rmtree(CHROMA_DIR, ignore_errors=True)
+        CHROMA_DIR.mkdir(parents=True, exist_ok=True)
     except Exception as wipe_e:
         logging.error(f"[Search] Failed to wipe DB dir: {wipe_e}")
 
+    try:
+        client = chromadb.PersistentClient(path=str(CHROMA_DIR))
+    except Exception as client_e:
+        logging.error(f"[Search] Failed to re-init client: {client_e}")
+        # Final fallback: In-memory DB
+        client = chromadb.EphemeralClient()
+
     EXPORT_PATH = DATA_DIR / "chroma_export.json"
     if not EXPORT_PATH.exists():
-        raise RuntimeError(f"復元ファイル {EXPORT_PATH} が存在しません。")
+        raise RuntimeError(f"復元用ファイル {EXPORT_PATH} が存在しません。デプロイを確認してください。")
         
     with open(EXPORT_PATH, "r", encoding="utf-8") as f:
         records = json.load(f)
         
-    col = client.create_collection(
+    col = client.get_or_create_collection(
         name=COLLECTION_NAME,
         metadata={"hnsw:space": "cosine"},
     )
@@ -84,7 +82,8 @@ def ensure_local_index() -> None:
             metadatas=metadatas[i:i+batch_size],
             embeddings=embeddings[i:i+batch_size]
         )
-    logging.info(f"[Search] {len(records)}件のインデックスを復元完了。")
+    logging.info(f"[Search] {len(records)}件のインデックスを正常に復元しました。")
+    return True
 
 
 def configure_api():
