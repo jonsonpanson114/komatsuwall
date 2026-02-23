@@ -17,7 +17,7 @@ ENRICHED_DATA_PATH = DATA_DIR / "enriched_data.json"
 CHROMA_DIR = DATA_DIR / "chroma_db_v2"
 
 COLLECTION_NAME = "komatsu_cases"
-EMBEDDING_MODEL = "models/gemini-embedding-001"
+EMBEDDING_MODEL = "models/text-embedding-004"
 
 
 import logging
@@ -109,6 +109,7 @@ def configure_api():
 
 def get_embedding(text: str) -> list[float]:
     try:
+        # まずは最新の task_type 付きを試す
         result = genai.embed_content(
             model=EMBEDDING_MODEL,
             content=text,
@@ -116,17 +117,25 @@ def get_embedding(text: str) -> list[float]:
         )
         return result["embedding"]
     except Exception as e:
-        logging.error(f"[Search] Embedding creation failed: {e}")
-        raise e
+        # 失敗したら task_type なしでフォールバック
+        logging.warning(f"[Search] Embedding with task_type failed, retrying without: {e}")
+        try:
+            result = genai.embed_content(
+                model=EMBEDDING_MODEL,
+                content=text,
+            )
+            return result["embedding"]
+        except Exception as e2:
+            logging.error(f"[Search] All embedding attempts failed: {e2}")
+            # さらなるフォールバック: 旧モデルなど
+            raise e2
 
 def get_query_embedding(text: str) -> list[float]:
     try:
-        # 特殊な文字や空文字のガード
         if not text or not text.strip():
-             # 空のクエリなら適当なベクトルを返すか、エラーにする
-             # ここでは空文字検索は上位で弾かれるはずだが一応
              return [0.0] * 768
 
+        # まずは最新の task_type 付きを試す
         result = genai.embed_content(
             model=EMBEDDING_MODEL,
             content=text,
@@ -134,9 +143,17 @@ def get_query_embedding(text: str) -> list[float]:
         )
         return result["embedding"]
     except Exception as e:
-        logging.error(f"[Search] Query embedding failed: {e}")
-        # 詳細なエラー情報を付与して再送
-        raise RuntimeError(f"Google Gemini Embedding Error: {str(e)}")
+        # 失敗したら task_type なしでフォールバック
+        logging.warning(f"[Search] Query embedding with task_type failed, retrying without: {e}")
+        try:
+            result = genai.embed_content(
+                model=EMBEDDING_MODEL,
+                content=text,
+            )
+            return result["embedding"]
+        except Exception as e2:
+            logging.error(f"[Search] All query embedding attempts failed: {e2}")
+            raise RuntimeError(f"Gemini Embedding Error: {str(e2)}")
 
 
 def build_index() -> chromadb.Collection:

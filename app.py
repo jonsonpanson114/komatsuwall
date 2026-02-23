@@ -1056,6 +1056,15 @@ def main():
     # サイドバー — 製品ブラウズ
     _, products = load_filter_options()
     with st.sidebar:
+        st.markdown("### 🛠 設定")
+        st.session_state["debug_mode"] = st.toggle("🔧 デバッグモード", value=st.session_state.get("debug_mode", False))
+        
+        if st.button("🧹 キャッシュをクリア", use_container_width=True):
+            st.cache_data.clear()
+            st.success("キャッシュをクリアしました")
+            st.rerun()
+            
+        st.markdown("---")
         st.markdown("### 🖌 製品で絞り込む")
         if st.button("(すべて)", use_container_width=True, key="prod_all"):
             st.session_state["browse_product"] = ""
@@ -1071,7 +1080,6 @@ def main():
                 st.rerun()
 
         st.markdown("---")
-        st.session_state["debug_mode"] = st.toggle("🔧 デバッグモード", value=st.session_state.get("debug_mode", False))
 
 
     # Detail View Rendering
