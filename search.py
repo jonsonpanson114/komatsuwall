@@ -17,7 +17,7 @@ ENRICHED_DATA_PATH = DATA_DIR / "enriched_data.json"
 CHROMA_DIR = DATA_DIR / "chroma_db_v2"
 
 COLLECTION_NAME = "komatsu_cases"
-EMBEDDING_MODEL = "models/text-embedding-004"
+EMBEDDING_MODEL = "models/gemini-embedding-001"
 
 
 import logging
