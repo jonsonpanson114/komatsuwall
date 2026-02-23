@@ -1108,9 +1108,10 @@ def main():
         st.session_state["page"] = 0
         st.session_state["search_query"] = query
     
-    # 検索バーの下にサジェスト (類似検索時は表示しない？いや、してもいい)
+    # 検索バーの下にサジェスト (類似検索時は表示しない)
     if not st.session_state["similar_query_id"]:
         render_suggestions()
+        st.markdown("<div style='height:40px'></div>", unsafe_allow_html=True)
 
     # フィルタリングUI
     location_groups, products = load_filter_options()
@@ -1274,12 +1275,16 @@ def set_search(query):
 
 def render_suggestions():
     SUGGESTION_DATA = {
-        "色・素材": ["木目調", "ホワイト", "モノトーン", "透明感のあるガラス", "温かみのある木目調"],
-        "雰囲気": ["開放的", "和モダン", "未来的", "落ち着いた空間", "ホテルライクなロビー"],
-        "利用シーン": ["会議室", "エントランス", "教室・講堂", "カフェスペース", "明るい教室"],
-        "ユニーク": ["曲線デザイン", "遊び心のある空間", "アート・壁画", "独創的な配置", "変わった物件"],
-        "製品タイプ": ["ガラス間仕切", "移動壁", "スライディングドア"]
+        "色・素材": ["木目調", "温かみのある木目調", "ホワイト", "モノトーン", "透明感のあるガラス", "ブラック", "コンクリート打ちっ放し", "アクセントカラー"],
+        "雰囲気": ["開放的", "和モダン", "未来的", "落ち着いた空間", "ホテルライクなロビー", "カフェ風", "ラグジュアリー", "カジュアル"],
+        "ユニーク": ["曲線デザイン", "遊び心のある空間", "アート・壁画", "独創的な配置", "変わった物件", "隠し扉", "ガラスの向こう側", "インダストリアル"],
+        "利用シーン": ["会議室", "エントランス", "教室・講堂", "カフェスペース", "明るい教室", "役員室", "リフレッシュエリア", "集中ブース"],
+        "製品タイプ": ["ガラス間仕切", "移動壁", "スライディングドア", "マイティ", "トイレビュー", "吸音パネル", "ローパーティション"]
     }
+
+    # 初期画面（検索未入力時）の場合は案内文を表示
+    if not st.session_state.get("search_query") and not st.session_state.get("similar_query_id"):
+        st.markdown("<h3 style='text-align: center; color: var(--ash); font-size: 18px; margin-top: 32px; margin-bottom: 16px;'>💡 こんな検索はどうですか？</h3>", unsafe_allow_html=True)
 
     if "selected_suggestion_genre" not in st.session_state:
         st.session_state["selected_suggestion_genre"] = None
@@ -1290,7 +1295,7 @@ def render_suggestions():
     for i, genre in enumerate(genres):
         with genre_cols[i]:
             is_selected = st.session_state["selected_suggestion_genre"] == genre
-            # 選択中のボタンは少し目立たせる（Streamlitの標準機能では限界があるが、キーを工夫）
+            # 選択中のボタンは少し目立たせる
             label = f"◉ {genre}" if is_selected else genre
             if st.button(label, key=f"genre_{i}", use_container_width=True):
                 if is_selected:
@@ -1304,10 +1309,10 @@ def render_suggestions():
     if selected_genre and selected_genre in SUGGESTION_DATA:
         st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
         items = SUGGESTION_DATA[selected_genre]
-        item_cols = st.columns(len(items))
+        item_cols = st.columns(4) # 項目が多いので4列に固定して折り返す
         for i, item in enumerate(items):
-            with item_cols[i]:
-                # on_clickを使用して、ボタンクリック時に直接session_stateを更新
+            col_idx = i % 4
+            with item_cols[col_idx]:
                 st.button(
                     item, 
                     key=f"item_{selected_genre}_{i}", 
