@@ -1268,20 +1268,54 @@ def main():
 def set_search(query):
     st.session_state["search_query"] = query
     st.session_state["search_input"] = query
+    # サジェストから検索した場合はジャンル選択を維持したいならここはいじらない
+    # もし検索時にリセットしたいなら以下を有効にする
+    # st.session_state["selected_suggestion_genre"] = None
 
 def render_suggestions():
-    suggestions = [
-        "開放的なオフィス",
-        "和モダンな内装",
-        "ガラスで仕切られた会議室",
-        "温かみのある木目調",
-        "ホテルライクなロビー",
-        "明るい教室",
-    ]
-    cols = st.columns(len(suggestions))
-    for i, s in enumerate(suggestions):
-        with cols[i]:
-            st.button(s, key=f"sg_{i}", on_click=set_search, args=(s,))
+    SUGGESTION_DATA = {
+        "色・素材": ["木目調", "ホワイト", "モノトーン", "透明感のあるガラス", "温かみのある木目調"],
+        "雰囲気": ["開放的", "和モダン", "未来的", "落ち着いた空間", "ホテルライクなロビー"],
+        "利用シーン": ["会議室", "エントランス", "教室・講堂", "カフェスペース", "明るい教室"],
+        "ユニーク": ["曲線デザイン", "遊び心のある空間", "アート・壁画", "独創的な配置", "変わった物件"],
+        "製品タイプ": ["ガラス間仕切", "移動壁", "スライディングドア"]
+    }
+
+    if "selected_suggestion_genre" not in st.session_state:
+        st.session_state["selected_suggestion_genre"] = None
+
+    # 1段目: ジャンル選択
+    genres = list(SUGGESTION_DATA.keys())
+    genre_cols = st.columns(len(genres))
+    for i, genre in enumerate(genres):
+        with genre_cols[i]:
+            is_selected = st.session_state["selected_suggestion_genre"] == genre
+            # 選択中のボタンは少し目立たせる（Streamlitの標準機能では限界があるが、キーを工夫）
+            label = f"◉ {genre}" if is_selected else genre
+            if st.button(label, key=f"genre_{i}", use_container_width=True):
+                if is_selected:
+                    st.session_state["selected_suggestion_genre"] = None
+                else:
+                    st.session_state["selected_suggestion_genre"] = genre
+                st.rerun()
+
+    # 2段目: 具体的なキーワード（ジャンル選択中のみ表示）
+    selected_genre = st.session_state["selected_suggestion_genre"]
+    if selected_genre and selected_genre in SUGGESTION_DATA:
+        st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+        items = SUGGESTION_DATA[selected_genre]
+        item_cols = st.columns(len(items))
+        for i, item in enumerate(items):
+            with item_cols[i]:
+                # on_clickを使用して、ボタンクリック時に直接session_stateを更新
+                st.button(
+                    item, 
+                    key=f"item_{selected_genre}_{i}", 
+                    on_click=set_search, 
+                    args=(item,),
+                    use_container_width=True,
+                    type="secondary"
+                )
 
 
 if __name__ == "__main__":
