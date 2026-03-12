@@ -8,7 +8,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 import chromadb
-import google.generativeai as genai
+from google import genai
+from google.genai.types import EmbedContentConfig
 
 load_dotenv()
 
@@ -17,7 +18,8 @@ ENRICHED_DATA_PATH = DATA_DIR / "enriched_data.json"
 CHROMA_DIR = DATA_DIR / "chroma_db_v2"
 
 COLLECTION_NAME = "komatsu_cases"
-EMBEDDING_MODEL = "models/gemini-embedding-001"
+EMBEDDING_MODEL = "gemini-embedding-001"
+EMBEDDING_DIMENSION = 3072
 
 
 import logging
@@ -99,66 +101,52 @@ def ensure_local_index() -> bool:
 
 
 def configure_api():
-    api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY")
+    api_key = os.environ.get("GOOGLE_API_KEY") or os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_GENAI_API_KEY")
     if not api_key:
         raise ValueError(
-            "GOOGLE_API_KEY または GEMINI_API_KEY 環境変数を設定してください。"
+            "GOOGLE_API_KEY または GEMINI_API_KEY または GOOGLE_GENAI_API_KEY 環境変数を設定してください。"
         )
-    genai.configure(api_key=api_key)
+    return genai.Client(api_key=api_key)
 
 
 def get_embedding(text: str) -> list[float]:
+    client = configure_api()
     try:
-        # まずは最新の task_type 付きを試す
-        result = genai.embed_content(
+        response = client.models.embed_content(
             model=EMBEDDING_MODEL,
-            content=text,
-            task_type="retrieval_document",
+            contents=[text],
+            config=EmbedContentConfig(
+                task_type="RETRIEVAL_DOCUMENT",
+                output_dimensionality=EMBEDDING_DIMENSION,
+            ),
         )
-        return result["embedding"]
+        return response.embeddings[0].values
     except Exception as e:
-        # 失敗したら task_type なしでフォールバック
-        logging.warning(f"[Search] Embedding with task_type failed, retrying without: {e}")
-        try:
-            result = genai.embed_content(
-                model=EMBEDDING_MODEL,
-                content=text,
-            )
-            return result["embedding"]
-        except Exception as e2:
-            logging.error(f"[Search] All embedding attempts failed: {e2}")
-            # さらなるフォールバック: 旧モデルなど
-            raise e2
+        logging.error(f"[Search] Embedding failed: {e}")
+        raise
 
 def get_query_embedding(text: str) -> list[float]:
+    client = configure_api()
     try:
         if not text or not text.strip():
-             return [0.0] * 768
+            return [0.0] * EMBEDDING_DIMENSION
 
-        # まずは最新の task_type 付きを試す
-        result = genai.embed_content(
+        response = client.models.embed_content(
             model=EMBEDDING_MODEL,
-            content=text,
-            task_type="retrieval_query",
+            contents=[text],
+            config=EmbedContentConfig(
+                task_type="RETRIEVAL_QUERY",
+                output_dimensionality=EMBEDDING_DIMENSION,
+            ),
         )
-        return result["embedding"]
+        return response.embeddings[0].values
     except Exception as e:
-        # 失敗したら task_type なしでフォールバック
-        logging.warning(f"[Search] Query embedding with task_type failed, retrying without: {e}")
-        try:
-            result = genai.embed_content(
-                model=EMBEDDING_MODEL,
-                content=text,
-            )
-            return result["embedding"]
-        except Exception as e2:
-            logging.error(f"[Search] All query embedding attempts failed: {e2}")
-            raise RuntimeError(f"Gemini Embedding Error: {str(e2)}")
+        logging.error(f"[Search] Query embedding failed: {e}")
+        raise RuntimeError(f"Gemini Embedding Error: {str(e)}")
 
 
 def build_index() -> chromadb.Collection:
-    configure_api()
-
+    # configure_api() は get_embedding() 内で呼ばれるため、ここでは呼ばない
     client = chromadb.PersistentClient(path=str(CHROMA_DIR))
 
     existing = [c.name for c in client.list_collections()]
@@ -235,8 +223,7 @@ def build_index() -> chromadb.Collection:
 
 def search(query: str, n_results: int = 300) -> list[dict]:
     """自然言語で検索。類似度の高い事例を deduplicated（case_id単位）で返す。"""
-    configure_api()
-
+    # configure_api() は get_query_embedding() 内で呼ばれる
     client = get_chroma_client()
     existing = [c.name for c in client.list_collections()]
     if COLLECTION_NAME not in existing:
