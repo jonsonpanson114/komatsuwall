@@ -683,6 +683,64 @@ def render_card(r: dict, card_index: int = 0, show_score: bool = True):
 
 
 
+def render_results_incremental(results: list[dict], query: str):
+    """インクリメンタルロード対応の結果表示"""
+    INITIAL_DISPLAY = 12  # 初期表示: 4行×3列
+    LOAD_MORE = 12        # 追加ロード: さらに4行
+
+    # セッションステートで表示件数を管理
+    if "display_limit" not in st.session_state:
+        st.session_state["display_limit"] = INITIAL_DISPLAY
+        st.session_state["last_query"] = ""
+
+    # クエリが変わったらリセット
+    if st.session_state["last_query"] != query:
+        st.session_state["display_limit"] = INITIAL_DISPLAY
+        st.session_state["last_query"] = query
+
+    display_limit = min(st.session_state["display_limit"], len(results))
+    display_results = results[:display_limit]
+
+    # ヘッダー
+    st.markdown(f"""
+<div class="results-bar">
+<span class="r-count">{display_limit}件表示 / 合計{len(results)}件</span>
+<span class="r-query">{query}</span>
+</div>
+""",
+        unsafe_allow_html=True,
+    )
+
+    # カード表示
+    card_idx = 0
+    for row in range(0, len(display_results), 3):
+        cols = st.columns(3, gap="medium")
+        for i, col in enumerate(cols):
+            idx = row + i
+            if idx < len(display_results):
+                r = display_results[idx]
+                case_id = r.get("case_id")
+
+                with col:
+                    render_card(r, card_index=card_idx)
+
+                    # 詳細ボタン (カードの下に配置)
+                    if st.button("詳細を見る", key=f"det_btn_{idx}_{case_id}", use_container_width=True):
+                        st.session_state["selected_case_id"] = case_id
+                        st.rerun()
+
+                    card_idx += 1
+
+    # 「もっと見る」ボタン
+    if display_limit < len(results):
+        remaining = min(LOAD_MORE, len(results) - display_limit)
+        st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
+        if st.button(f"📖 さらに{remaining}件を表示する", use_container_width=True):
+            st.session_state["display_limit"] += LOAD_MORE
+            st.rerun()
+
+
+# 元のrender_resultsは詳細ビュー用に残す
 def render_results(results: list[dict], query: str):
     st.markdown(f"""
 <div class="results-bar">
@@ -701,16 +759,16 @@ def render_results(results: list[dict], query: str):
             if idx < len(results):
                 r = results[idx]
                 case_id = r.get("case_id")
-                
+
                 with col:
                     render_card(r, card_index=card_idx)
-                    
+
                     # 詳細ボタン (カードの下に配置)
                     # Unique key is essential here
                     if st.button("詳細を見る", key=f"det_btn_{idx}_{case_id}", use_container_width=True):
                         st.session_state["selected_case_id"] = case_id
                         st.rerun()
-                    
+
                     card_idx += 1
 
 
@@ -1122,7 +1180,7 @@ def main():
             location_display.append(f"{loc}  [{region}]")
     loc_label_to_raw = {f"{loc}  [{region}]": loc for region, locs in location_groups.items() for loc in locs}
     
-    with st.expander("詳細検索 (絞り込み)", expanded=False):
+    with st.expander("🔍 絞り込み（場所・製品）", expanded=False):
         c1, c2 = st.columns(2)
         with c1:
             sel_labels = st.multiselect("場所", location_display, placeholder="地方・都道府県を選択...")
@@ -1207,52 +1265,56 @@ def main():
         display_results = filtered_results[start:start + PAGE_SIZE]
         
         if display_results:
-            # ヘッダー：件数表示
-            st.markdown(f"""
+            # インクリメンタルロード: 検索結果の場合
+            is_search = bool(query or st.session_state.get("similar_query_id"))
+            if is_search:
+                render_results_incremental(filtered_results, mode_title)
+            else:
+                # 「すべての施工事例」は従来のページネーションを使用
+                st.markdown(f"""
 <div class="results-bar">
 <span class="r-count">{total}件中 {start+1}〜{min(start+PAGE_SIZE,total)}件表示</span>
 <span class="r-query">{mode_title}</span>
 </div>
 """,
-                unsafe_allow_html=True,
-            )
-            
-            # カード表示
-            is_search = bool(query or st.session_state.get("similar_query_id"))
-            card_idx = 0
-            for row in range(0, len(display_results), 3):
-                cols = st.columns(3, gap="medium")
-                for i, col in enumerate(cols):
-                    idx = row + i
-                    if idx < len(display_results):
-                        r = display_results[idx]
-                        case_id = r.get("case_id")
-                        with col:
-                            render_card(r, card_index=card_idx, show_score=is_search)
-                            if st.button("詳細を見る", key=f"det_btn_{start+idx}_{case_id}", use_container_width=True):
-                                st.session_state["selected_case_id"] = case_id
+                    unsafe_allow_html=True,
+                )
+
+                # カード表示
+                card_idx = 0
+                for row in range(0, len(display_results), 3):
+                    cols = st.columns(3, gap="medium")
+                    for i, col in enumerate(cols):
+                        idx = row + i
+                        if idx < len(display_results):
+                            r = display_results[idx]
+                            case_id = r.get("case_id")
+                            with col:
+                                render_card(r, card_index=card_idx, show_score=is_search)
+                                if st.button("詳細を見る", key=f"det_btn_{start+idx}_{case_id}", use_container_width=True):
+                                    st.session_state["selected_case_id"] = case_id
+                                    st.rerun()
+                                card_idx += 1
+
+                # ページネーションボタン
+                if total_pages > 1:
+                    st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
+                    p_cols = st.columns([1, 2, 1])
+                    with p_cols[0]:
+                        if page > 0:
+                            if st.button("← 前のページ", use_container_width=True):
+                                st.session_state["page"] = page - 1
                                 st.rerun()
-                            card_idx += 1
-            
-            # ページネーションボタン
-            if total_pages > 1:
-                st.markdown("<div style='height:24px'></div>", unsafe_allow_html=True)
-                p_cols = st.columns([1, 2, 1])
-                with p_cols[0]:
-                    if page > 0:
-                        if st.button("← 前のページ", use_container_width=True):
-                            st.session_state["page"] = page - 1
-                            st.rerun()
-                with p_cols[1]:
-                    st.markdown(
-                        f"<p style='text-align:center;color:#94a3b8;font-size:14px;padding-top:8px'>{page+1} / {total_pages} ページ</p>",
-                        unsafe_allow_html=True
-                    )
-                with p_cols[2]:
-                    if page < total_pages - 1:
-                        if st.button("次のページ →", use_container_width=True):
-                            st.session_state["page"] = page + 1
-                            st.rerun()
+                    with p_cols[1]:
+                        st.markdown(
+                            f"<p style='text-align:center;color:#94a3b8;font-size:14px;padding-top:8px'>{page+1} / {total_pages} ページ</p>",
+                            unsafe_allow_html=True
+                        )
+                    with p_cols[2]:
+                        if page < total_pages - 1:
+                            if st.button("次のページ →", use_container_width=True):
+                                st.session_state["page"] = page + 1
+                                st.rerun()
         else:
             st.markdown(
                 '<div class="empty"><h2>一致する事例が見つかりませんでした。</h2>'
