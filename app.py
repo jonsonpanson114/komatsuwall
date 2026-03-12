@@ -6,7 +6,6 @@ Architectural Monograph Design
 import base64
 import io
 import json
-import textwrap  # Added for safe HTML rendering
 from pathlib import Path
 
 import streamlit as st
@@ -32,9 +31,26 @@ st.set_page_config(
 
 NOISE_SVG = "data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"
 
+# ───────────────────────────────────────────────────────────────
+#   HERO — Architectural Monograph: Immersive & Elegant
+# ───────────────────────────────────────────────────────────────
+
 st.markdown(
     """
 <style>
+@keyframes floatUp {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+}
+@keyframes pulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 0.6; }
+}
+@keyframes shimmer {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
 /* ── Typography ── */
 @import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap');
 
@@ -65,6 +81,140 @@ st.markdown(
     --accent-glow: rgba(96, 165, 250, 0.15);
 }
 
+/* ══════════════════════════════════════════════
+   HERO — Architectural Monograph: Immersive & Elegant
+   ════════════════════════════════════════════════════ */
+.hero {
+    padding: 180px 60px 140px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: transparent;
+    min-height: 600px;
+}
+
+.hero-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center 45%;
+    animation: slowDrift 60s ease-in-out infinite;
+    z-index: 0;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+        to bottom,
+        rgba(8, 8, 8, 0.50) 0%,
+        rgba(8, 8, 8, 0.35) 35%,
+        rgba(8, 8, 8, 0.30) 60%,
+        rgba(8, 8, 8, 0.50) 75%,
+        rgba(8, 8, 8, 0.70) 100%
+    );
+}
+
+.hero-content {
+    position: relative;
+    z-index: 5;
+}
+
+.hero-overline {
+    font-family: var(--body);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 32px;
+    position: relative;
+    z-index: 6;
+    animation: fadeUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+
+.hero-overline::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+}
+
+.hero-headline {
+    font-family: var(--display);
+    font-size: 72px;
+    font-weight: 300;
+    letter-spacing: 0.02em;
+    line-height: 1.15;
+    margin: 0 0 28px;
+    position: relative;
+    z-index: 6;
+    color: var(--charcoal);
+    animation: fadeUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) 0.4s both;
+    text-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.hero-subhead {
+    font-family: var(--body);
+    font-size: 17px;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 520px;
+    margin: 0 auto 24px;
+    line-height: 1.7;
+    letter-spacing: 0.03em;
+    position: relative;
+    z-index: 6;
+    animation: fadeUp 1.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+
+.hero-actions {
+    margin-top: 48px;
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 1.6s cubic-bezier(0.2, 1, 0.3, 1) both;
+}
+
+.hero-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: var(--charcoal);
+    font-family: var(--body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: pulse 3s ease-in-out infinite;
+}
+
+.hero-cta:hover {
+    background: var(--charcoal);
+    color: var(--white);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+@keyframes slowDrift {
+    0% { transform: scale(1.0) translateY(0); }
+    50% { transform: scale(1.03) translateY(-20px); }
+    100% { transform: scale(1.0) translateY(0); }
+}
+
+/* ════════════════════════════════════════════════
+   STREAMLIT OVERRIDES
+   ══════════════════════════════════════════════════ */
 html, body, [class*="css"] {
     font-family: var(--body) !important;
     -webkit-font-smoothing: antialiased;
@@ -582,13 +732,28 @@ def truncate(text: str, n: int = 140) -> str:
 
 
 def render_hero():
-    # Ethereal design relies on CSS background gradient, no heavy hero image
-    st.markdown("""
+    """Architectural Monograph: Full-bleed background with elegant typography"""
+    b64 = hero_img_b64(HERO_IMAGE)
+    bg_style = (f'style="background-image:url(data:image/jpeg;base64,{b64})"' if b64 else "")
+
+    st.markdown(f"""
 <div class="hero">
-<p class="hero-overline">Komatsu Wall Industry</p>
-<h1 class="hero-headline">空間を、直感で見つける。</h1>
-<p class="hero-subhead">製品名でも、雰囲気でも。<br>
-イメージするだけで、理想の施工事例に出会えます。</p>
+    <div class="hero-bg" {bg_style}></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <p class="hero-overline">Komatsu Wall Industry</p>
+        <h1 class="hero-headline">空間を、直感で見つける。</h1>
+        <p class="hero-subhead">製品名でも、雰囲気でも。<br>
+        イメージするだけで、理想の施工事例に出会えます。</p>
+        <div class="hero-actions">
+            <button class="hero-cta" onclick="document.querySelector('div[data-testid=\\'stTextInput\\']>input').focus()">
+                🔍 検索を開始
+            </button>
+            <button class="hero-cta" onclick="document.querySelector('.stSpinner[style*=\\'text-align\\': center\\']').scrollIntoView({behavior: 'smooth'})">
+                ⬇ 施工事例を見る
+            </button>
+        </div>
+    </div>
 </div>
 """,
         unsafe_allow_html=True,
