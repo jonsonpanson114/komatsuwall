@@ -116,7 +116,6 @@ def get_embedding(text: str) -> list[float]:
             model=EMBEDDING_MODEL,
             contents=[text],
             config=EmbedContentConfig(
-                task_type="retrieval_document",
                 output_dimensionality=EMBEDDING_DIMENSION,
             ),
         )
@@ -135,7 +134,6 @@ def get_query_embedding(text: str) -> list[float]:
             model=EMBEDDING_MODEL,
             contents=[text],
             config=EmbedContentConfig(
-                task_type="retrieval_query",
                 output_dimensionality=EMBEDDING_DIMENSION,
             ),
         )
