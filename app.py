@@ -15,6 +15,10 @@ from PIL import Image
 
 load_dotenv()
 
+# Enable debug logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 DATA_DIR = Path(__file__).parent / "data"
 HERO_IMAGE = str(DATA_DIR / "images" / "3460_0.jpg")  # mosaic glass corridor
 
@@ -1551,4 +1555,9 @@ def render_suggestions():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except Exception as e:
+        logger.error(f"Unhandled exception in main: {e}", exc_info=True)
+        st.error(f"⚠️ エラーが発生しました: {str(e)}")
+        st.exception(e)
