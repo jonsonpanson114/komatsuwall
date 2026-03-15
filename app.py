@@ -56,159 +56,141 @@ st.markdown(
     100% { background-position: 200% center; }
 }
 /* ── Typography ── */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
 :root {
     --display: "Outfit", "Noto Sans JP", sans-serif;
+    --serif: "Playfair Display", serif;
+    --mono: "JetBrains Mono", monospace;
     --body: "Outfit", "Noto Sans JP", sans-serif;
 
-    /* Minimal Light Palette (Architectural) */
-    --ink: #0f172a;       /* Dark text */
-    --charcoal: #334155;  /* Main text */
-    --stone: #64748b;     /* Muted text */
-    --ash: #94a3b8;       /* Lighter muted */
-    --mist: #e2e8f0;      /* Border/ subtle bg */
-    --silk: #f8fafc;      /* Card bg */
-    --linen: #f1f5f9;     /* Main bg */
-    --cream: #ffffff;     /* Deep bg */
-    --white: #ffffff;
+    /* Architectural Palette: Mono & Brass */
+    --ink: #0f172a;       /* Deepest Ink */
+    --charcoal: #1e293b;  /* Solid Black */
+    --stone: #64748b;     /* Slate */
+    --ash: #94a3b8;       /* Silver */
+    --mist: #e2e8f0;      /* Fine Line */
+    --silk: #f8fafc;      /* Background */
+    --linen: #fdfcfb;     /* Paper White */
+    --cream: #ffffff;     /* Highlight */
+    --brass: #b8860b;     /* Accents */
     
-    /* Clean Light Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.75);
-    --glass-border: rgba(0, 0, 0, 0.08);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-    --blur: blur(20px);
+    /* Technical Graphics */
+    --line: 1px solid rgba(15, 23, 42, 0.08);
+    --line-heavy: 1px solid rgba(15, 23, 42, 0.4);
+    --glass-bg: rgba(253, 252, 251, 0.85);
+    --glass-border: rgba(15, 23, 42, 0.05);
+    --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    --blur: blur(12px);
 
-    /* Accent — Architectural Blue */
-    --accent: #0369a1;    /* Deep Blue */
-    --accent-light: #e0f2fe; 
-    --accent-glow: rgba(3, 105, 161, 0.15);
-    --accent-gradient: linear-gradient(135deg, #0284c7, #0369a1);
+    /* Accents */
+    --accent: #1e293b; 
+    --accent-light: #f1f5f9;
+    --accent-glow: rgba(0, 0, 0, 0.02);
+    --accent-gradient: linear-gradient(90deg, #1e293b, #334155);
 }
 
 /* ══════════════════════════════════════════════
    HERO — Architectural Monograph: Immersive & Elegant
    ════════════════════════════════════════════════════ */
 .hero {
-    padding: 180px 60px 140px;
-    text-align: center;
+    padding: 140px 60px 80px;
+    text-align: left; /* Asymmetrical layout */
     position: relative;
     overflow: hidden;
-    background: transparent;
-    min-height: 600px;
+    background: var(--linen);
+    min-height: 500px;
+    display: flex;
+    align-items: center;
+    border-bottom: var(--line);
 }
 
 .hero-bg {
     position: absolute;
-    inset: 0;
+    right: 0;
+    top: 0;
+    width: 60%;
+    height: 100%;
     background-size: cover;
-    background-position: center 45%;
-    animation: slowDrift 60s ease-in-out infinite;
+    background-position: center;
+    opacity: 0.9;
     z-index: 0;
+    mask-image: linear-gradient(to left, black 60%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to left, black 60%, transparent 100%);
 }
 
 .hero-overlay {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.40) 0%,
-        rgba(255, 255, 255, 0.25) 35%,
-        rgba(255, 255, 255, 0.20) 60%,
-        rgba(255, 255, 255, 0.40) 75%,
-        rgba(255, 255, 255, 0.85) 100%
-    );
+    display: none; /* Rely on masking and clean bg */
 }
 
 .hero-content {
     position: relative;
     z-index: 5;
+    max-width: 600px;
 }
 
 .hero-overline {
-    font-family: var(--body);
-    font-size: 11px;
+    font-family: var(--mono);
+    font-size: 10px;
     font-weight: 500;
-    letter-spacing: 0.25em;
+    letter-spacing: 0.4em;
     text-transform: uppercase;
-    color: var(--stone);
-    margin: 0 0 32px;
-    position: relative;
-    z-index: 6;
-    animation: fadeUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) both;
-}
-
-.hero-overline::after {
-    content: "";
-    position: absolute;
-    bottom: -8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 40px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15));
+    color: var(--brass);
+    margin: 0 0 16px;
+    animation: fadeIn 1s ease both;
 }
 
 .hero-headline {
-    font-family: var(--display);
-    font-size: 72px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    line-height: 1.15;
-    margin: 0 0 28px;
-    position: relative;
-    z-index: 6;
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 400;
+    font-style: italic; /* Elegant touch */
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    margin: 0 0 24px;
     color: var(--ink);
-    animation: fadeUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) 0.4s both;
-    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    animation: fadeUp 0.8s ease both;
 }
 
 .hero-subhead {
     font-family: var(--body);
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 300;
-    color: var(--charcoal);
-    max-width: 540px;
-    margin: 0 auto 24px;
-    line-height: 1.7;
+    color: var(--stone);
+    max-width: 440px;
+    margin: 0 0 40px;
+    line-height: 1.8;
     letter-spacing: 0.02em;
-    position: relative;
-    z-index: 6;
-    animation: fadeUp 1.4s cubic-bezier(0.2, 1, 0.3, 1) both;
+    animation: fadeUp 1s ease both;
 }
 
 .hero-actions {
-    margin-top: 48px;
     display: flex;
-    gap: 16px;
-    justify-content: center;
-    flex-wrap: wrap;
-    animation: fadeUp 1.6s cubic-bezier(0.2, 1, 0.3, 1) both;
+    gap: 12px;
+    justify-content: flex-start;
 }
 
 .hero-cta {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
-    padding: 14px 28px;
+    padding: 12px 24px;
     background: var(--ink);
-    border-radius: 4px;
-    border: none;
+    border: 1px solid var(--ink);
     color: var(--white);
     font-family: var(--body);
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .hero-cta:hover {
-    background: var(--accent);
-    color: var(--white);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    color: var(--ink);
+    transform: translateY(-2px);
 }
+
 
 @keyframes slowDrift {
     0% { transform: scale(1.0) translateY(0); }
@@ -237,8 +219,7 @@ div[data-testid="stStatusWidget"] {
 }
 
 .stApp {
-    background: radial-gradient(circle at top center, #ffffff, #f1f5f9);
-    background-attachment: fixed;
+    background: var(--linen);
 }
 .stApp > header { background: transparent !important; }
 
@@ -267,31 +248,24 @@ div[data-testid="stTextInput"] {
     margin: 0 auto;
 }
 div[data-testid="stTextInput"] > div > div > input {
-    font-family: var(--body) !important;
-    font-size: 16px !important;
-    font-weight: 400 !important;
-    padding: 20px 32px !important;
-    border-radius: 50px !important; /* Capsule */
-    border: 1px solid var(--glass-border) !important;
-    background: var(--glass-bg) !important;
-    backdrop-filter: var(--blur) !important;
-    -webkit-backdrop-filter: var(--blur) !important;
+    font-family: var(--mono) !important;
+    font-size: 14px !important;
+    padding: 16px 24px !important;
+    border-radius: 0px !important; /* Sharp Architectural */
+    border: none !important;
+    border-bottom: 2px solid var(--ink) !important;
+    background: transparent !important;
     color: var(--ink) !important;
-    letter-spacing: 0.02em !important;
-    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1) !important;
-    box-shadow: var(--glass-shadow) !important;
+    letter-spacing: 0.05em !important;
+    transition: all 0.2s ease !important;
 }
 div[data-testid="stTextInput"] > div > div > input::placeholder {
-    color: var(--stone) !important;
+    color: var(--ash) !important;
     font-weight: 300 !important;
 }
 div[data-testid="stTextInput"] > div > div > input:focus {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border-color: var(--accent) !important;
-    box-shadow: var(--glass-shadow),
-                0 0 0 4px var(--accent-glow) !important;
+    border-bottom-color: var(--brass) !important;
     outline: none !important;
-    transform: translateY(-4px);
 }
 div[data-testid="stTextInput"] > label {
     display: none !important;
@@ -302,24 +276,22 @@ div[data-testid="stTextInput"] > label {
    CHIPS — Minimalist Pills
    ════════════════════════════════════════════════════════ */
 div[data-testid="stButton"] > button {
-    font-family: var(--body) !important;
-    background: rgba(255, 255, 255, 0.6) !important;
-    color: var(--charcoal) !important;
-    border: 1px solid rgba(0, 0, 0, 0.05) !important;
-    border-radius: 30px !important;
-    padding: 8px 20px !important;
-    font-size: 13px !important;
+    font-family: var(--mono) !important;
+    background: transparent !important;
+    color: var(--stone) !important;
+    border: 1px solid var(--mist) !important;
+    border-radius: 0px !important;
+    padding: 6px 16px !important;
+    font-size: 11px !important;
     font-weight: 500 !important;
-    letter-spacing: 0.02em !important;
-    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1) !important;
-    backdrop-filter: blur(8px);
+    text-transform: uppercase;
+    letter-spacing: 0.1em !important;
+    transition: all 0.2s ease !important;
 }
 div[data-testid="stButton"] > button:hover {
     color: var(--white) !important;
-    background: var(--charcoal) !important;
-    border-color: var(--charcoal) !important;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    transform: translateY(-2px) !important;
+    background: var(--ink) !important;
+    border-color: var(--ink) !important;
 }
 div[data-testid="stButton"] > button:active {
     transform: scale(0.96) translateY(0) !important;
@@ -330,53 +302,51 @@ div[data-testid="stButton"] > button:active {
    RESULTS HEADER
    ════════════════════════════════════════════════════════ */
 .results-bar {
-    max-width: 1100px;
-    margin: 40px auto 0;
-    padding: 0 32px 20px;
+    max-width: 1200px;
+    margin: 60px auto 32px;
+    padding: 0 0 12px;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    border-bottom: 1px solid rgba(255,255,255,0.3); /* Subtle divider */
+    border-bottom: 1px solid var(--ink); /* Thin technical line */
 }
 .results-bar .r-count {
-    font-family: var(--display);
-    font-size: 24px;
-    font-weight: 400;
-    color: var(--charcoal);
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
 }
 .results-bar .r-query {
-    font-size: 13px;
-    color: var(--ash);
-    font-weight: 300;
+    font-family: var(--serif);
+    font-size: 18px;
+    font-style: italic;
+    color: var(--stone);
 }
 
 /* ════════════════════════════════════════════════════════
    GALLERY CARDS — Glassmorphism
    ════════════════════════════════════════════════════════ */
 .card {
-    background: var(--white);
-    border: 1px solid var(--glass-border);
-    border-radius: 20px;
+    background: var(--linen);
+    border: 1px solid var(--mist); /* Thin technical border */
+    border-radius: 0; /* Sharp corners */
     overflow: hidden;
-    margin-bottom: 32px;
-    cursor: default;
-    position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
-    animation: fadeUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
+    margin-bottom: 48px;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.8s ease both;
 }
 .card:hover {
-    transform: translateY(-8px);
-    background: var(--white);
-    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
-    border-color: rgba(0, 0, 0, 0.1);
+    border-color: var(--charcoal);
+    box-shadow: 10px 10px 0px rgba(15, 23, 42, 0.03); /* Offset shadow like drafting */
 }
 
 .card .thumb-wrap {
     position: relative;
     overflow: hidden;
-    margin: 8px 8px 0; /* Padding around image */
-    border-radius: 16px;
+    margin: 0;
+    border-bottom: var(--line);
 }
 .card .thumb {
     width: 100%;
@@ -399,10 +369,9 @@ div[data-testid="stButton"] > button:active {
     position: absolute;
     bottom: 0;
     left: 0;
-    height: 3px;
+    height: 2px;
     z-index: 2;
-    background: var(--accent-gradient);
-    opacity: 0.8;
+    background: var(--brass);
 }
 
 /* Metadata */
@@ -478,57 +447,57 @@ div[data-testid="stButton"] > button:active {
     text-align: center;
 }
 .pipeline .p-title {
-    font-family: var(--display);
-    font-size: 26px;
-    font-weight: 500;
-    color: var(--charcoal);
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
     margin: 0 0 8px;
 }
 .pipeline .p-sub {
-    font-family: var(--body);
-    font-size: 14px;
-    font-weight: 300;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
     color: var(--stone);
-    margin: 0 0 40px;
+    margin: 0 0 48px;
 }
 .step-card {
-    background: rgba(255,255,255,0.8);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 24px 16px;
-    text-align: center;
+    background: var(--linen);
+    border: var(--line);
+    border-radius: 0;
+    padding: 32px 24px;
+    text-align: left;
     transition: all 0.3s ease;
 }
 .step-card:hover {
-    background: rgba(255,255,255,1);
-    transform: translateY(-4px);
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
+    border-color: var(--ink);
 }
 .step-card .s-num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background: var(--linen);
-    color: var(--charcoal);
-    border-radius: 50%;
-    font-size: 14px;
-    font-weight: 700;
-    margin-bottom: 12px;
+    display: block;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--brass);
+    margin-bottom: 24px;
+    letter-spacing: 0.1em;
 }
 .step-card h4 {
     font-family: var(--display);
     font-size: 16px;
-    font-weight: 500;
-    color: var(--charcoal);
-    margin: 0 0 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ink);
+    margin: 0 0 12px;
 }
 .step-card p {
+    font-family: var(--body);
     font-size: 12px;
-    color: var(--ash);
+    color: var(--stone);
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 
@@ -543,11 +512,11 @@ div[data-testid="stButton"] > button:active {
     text-align: center;
 }
 .site-footer p {
-    font-family: var(--display);
-    font-size: 12px;
+    font-family: var(--mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
     color: var(--ash);
-    font-style: italic;
-    opacity: 0.7;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -835,13 +804,8 @@ def render_card(r: dict, card_index: int = 0, show_score: bool = True):
     dist = r.get("distance", 0.0)
     pct = max(0, int((1 - dist) * 100)) if show_score and dist > 0 else 0
 
-    # Score bar — warm gradient
-    if pct >= 80:
-        bar_bg = "linear-gradient(90deg, #9a7b5b, #c4a882)"
-    elif pct >= 60:
-        bar_bg = "linear-gradient(90deg, #b0b0b0, #d8d4ce)"
-    else:
-        bar_bg = "linear-gradient(90deg, #d8d4ce, #eae6df)"
+    # Score bar — Technical Brass
+    bar_bg = "var(--brass)" if pct >= 80 else "var(--ash)"
 
     name = r.get("project_name", "")
     products = r.get("products", "")
@@ -1599,8 +1563,9 @@ def main():
                                 st.rerun()
         else:
             st.markdown(
-                '<div class="empty" style="text-align:center; padding: 40px;"><h2 style="color:var(--white); font-weight:500;">一致する事例が見つかりませんでした。</h2>'
-                "<p style='color:var(--stone);'>別のキーワードや表現で試してみてください。</p></div>",
+                '<div class="empty" style="text-align:center; padding: 120px 40px; border-top: var(--line);">'
+                '<h2 style="color:var(--ink); font-family: var(--serif); font-style: italic; font-weight:400; font-size: 32px;">No specimens found.</h2>'
+                "<p style='color:var(--ash); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-top: 16px;'>一致する事例が見つかりませんでした。</p></div>",
                 unsafe_allow_html=True,
             )
 
@@ -1628,7 +1593,7 @@ def render_suggestions():
 
     # 初期画面（検索未入力時）の場合は案内文を表示
     if not st.session_state.get("search_query") and not st.session_state.get("similar_query_id"):
-        st.markdown("<h3 style='text-align: center; color: var(--ink); font-weight: 500; font-size: 18px; margin-top: 32px; margin-bottom: 16px;'>💡 こんな検索はどうですか？</h3>", unsafe_allow_html=True)
+        st.markdown("<p style='text-align: center; color: var(--stone); font-family: var(--mono); font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; margin: 48px 0 24px;'>[ Suggested Parameters ]</p>", unsafe_allow_html=True)
 
     if "selected_suggestion_genre" not in st.session_state:
         st.session_state["selected_suggestion_genre"] = None
