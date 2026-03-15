@@ -56,33 +56,34 @@ st.markdown(
     100% { background-position: 200% center; }
 }
 /* ── Typography ── */
-@import url('https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
 
 :root {
-    --display: "Times New Roman", "Zen Old Mincho", serif;
-    --body: "Helvetica Neue", "Zen Kaku Gothic New", sans-serif;
+    --display: "Outfit", "Noto Sans JP", sans-serif;
+    --body: "Outfit", "Noto Sans JP", sans-serif;
 
-    /* Ethereal Glass Palette */
-    --ink: #1e293b;       /* Dark Slate */
-    --charcoal: #334155;  /* Slate */
-    --stone: #64748b;     /* Light Slate */
-    --ash: #94a3b8;       /* Blue Grey */
-    --mist: #cbd5e1;      /* Light Blue Grey */
-    --silk: #e2e8f0;      /* Very Light Blue Grey */
-    --linen: #f1f5f9;     
-    --cream: #f8fafc;
+    /* Sleek Dark Mode Palette */
+    --ink: #cfd8dc;       /* Light text */
+    --charcoal: #f8fafc;  /* Main text */
+    --stone: #94a3b8;     /* Muted text */
+    --ash: #64748b;       /* Darker muted */
+    --mist: #334155;      /* Border/ subtle bg */
+    --silk: #1e293b;      /* Card bg */
+    --linen: #0f172a;     /* Main bg */
+    --cream: #020617;     /* Deep bg */
     --white: #ffffff;
     
-    /* Glass Effect */
-    --glass-bg: rgba(255, 255, 255, 0.65);
-    --glass-border: rgba(255, 255, 255, 0.4);
-    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
-    --blur: blur(12px);
+    /* Dark Glass Effect */
+    --glass-bg: rgba(15, 23, 42, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    --blur: blur(20px);
 
-    /* Accent — Soft Blue/Silver */
-    --accent: #60a5fa;
-    --accent-light: #bfdbfe;
-    --accent-glow: rgba(96, 165, 250, 0.15);
+    /* Accent — Ethereal Neon */
+    --accent: #8b5cf6; /* Violet */
+    --accent-light: #c4b5fd;
+    --accent-glow: rgba(139, 92, 246, 0.3);
+    --accent-gradient: linear-gradient(135deg, #a855f7, #3b82f6);
 }
 
 /* ══════════════════════════════════════════════
@@ -152,26 +153,31 @@ st.markdown(
 .hero-headline {
     font-family: var(--display);
     font-size: 72px;
-    font-weight: 300;
-    letter-spacing: 0.02em;
+    font-weight: 500;
+    letter-spacing: -0.02em;
     line-height: 1.15;
     margin: 0 0 28px;
     position: relative;
     z-index: 6;
-    color: var(--charcoal);
+    color: var(--white);
+    background: linear-gradient(to right, #ffffff, #94a3b8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
     animation: fadeUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) 0.4s both;
-    text-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    text-shadow: none; /* Shadow on text-clip is tricky, rely on glow */
 }
 
 .hero-subhead {
     font-family: var(--body);
-    font-size: 17px;
-    font-weight: 400;
-    color: rgba(255, 255, 255, 0.9);
-    max-width: 520px;
+    font-size: 18px;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 540px;
     margin: 0 auto 24px;
     line-height: 1.7;
-    letter-spacing: 0.03em;
+    letter-spacing: 0.02em;
     position: relative;
     z-index: 6;
     animation: fadeUp 1.4s cubic-bezier(0.2, 1, 0.3, 1) both;
@@ -191,10 +197,10 @@ st.markdown(
     align-items: center;
     gap: 10px;
     padding: 14px 28px;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--accent-gradient);
     border-radius: 50px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    color: var(--charcoal);
+    border: none;
+    color: var(--white);
     font-family: var(--body);
     font-size: 14px;
     font-weight: 500;
@@ -237,7 +243,7 @@ div[data-testid="stStatusWidget"] {
 }
 
 .stApp {
-    background: radial-gradient(circle at top left, #f8fafc, #e2e8f0);
+    background: radial-gradient(circle at top center, #0f172a, #020617);
     background-attachment: fixed;
 }
 .stApp > header { background: transparent !important; }
@@ -318,62 +324,63 @@ div[data-testid="stTextInput"] {
 }
 div[data-testid="stTextInput"] > div > div > input {
     font-family: var(--body) !important;
-    font-size: 15px !important;
+    font-size: 16px !important;
     font-weight: 400 !important;
-    padding: 18px 32px !important;
+    padding: 20px 32px !important;
     border-radius: 50px !important; /* Capsule */
     border: 1px solid var(--glass-border) !important;
     background: var(--glass-bg) !important;
     backdrop-filter: var(--blur) !important;
     -webkit-backdrop-filter: var(--blur) !important;
-    color: var(--charcoal) !important;
-    letter-spacing: 0.03em !important;
-    transition: all 0.3s ease !important;
-    box-shadow: var(--glass-shadow), 
-                0 4px 12px rgba(0,0,0,0.02) !important;
+    color: var(--white) !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1) !important;
+    box-shadow: var(--glass-shadow) !important;
 }
 div[data-testid="stTextInput"] > div > div > input::placeholder {
     color: var(--ash) !important;
     font-weight: 300 !important;
 }
 div[data-testid="stTextInput"] > div > div > input:focus {
-    background: rgba(255,255,255,0.85) !important;
-    border-color: var(--white) !important;
+    background: rgba(30, 41, 59, 0.85) !important;
+    border-color: var(--accent) !important;
     box-shadow: var(--glass-shadow),
                 0 0 0 4px var(--accent-glow) !important;
     outline: none !important;
-    transform: translateY(-2px);
+    transform: translateY(-4px);
 }
 div[data-testid="stTextInput"] > label {
     display: none !important;
 }
+
 
 /* ════════════════════════════════════════════════════════
    CHIPS — Minimalist Pills
    ════════════════════════════════════════════════════════ */
 div[data-testid="stButton"] > button {
     font-family: var(--body) !important;
-    background: rgba(255,255,255,0.4) !important;
+    background: rgba(30, 41, 59, 0.5) !important;
     color: var(--stone) !important;
-    border: 1px solid rgba(255,255,255,0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
     border-radius: 30px !important;
-    padding: 6px 18px !important;
-    font-size: 12px !important;
-    font-weight: 400 !important;
-    letter-spacing: 0.03em !important;
-    transition: all 0.2s ease !important;
-    backdrop-filter: blur(4px);
+    padding: 8px 20px !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em !important;
+    transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1) !important;
+    backdrop-filter: blur(8px);
 }
 div[data-testid="stButton"] > button:hover {
-    color: var(--ink) !important;
-    background: rgba(255,255,255,0.8) !important;
-    border-color: var(--white) !important;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    transform: translateY(-1px) !important;
+    color: var(--white) !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-color: var(--accent) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    transform: translateY(-2px) !important;
 }
 div[data-testid="stButton"] > button:active {
-    transform: scale(0.98) translateY(0) !important;
+    transform: scale(0.96) translateY(0) !important;
 }
+
 
 /* ════════════════════════════════════════════════════════
    RESULTS HEADER
@@ -403,26 +410,22 @@ div[data-testid="stButton"] > button:active {
    GALLERY CARDS — Glassmorphism
    ════════════════════════════════════════════════════════ */
 .card {
-    background: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: var(--silk);
+    border: 1px solid var(--glass-border);
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 32px;
     cursor: default;
     position: relative;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 
-                0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
     animation: fadeUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
 .card:hover {
     transform: translateY(-8px);
-    background: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 
-                0 10px 10px -5px rgba(0, 0, 0, 0.02);
-    border-color: rgba(255, 255, 255, 0.9);
+    background: rgba(30, 41, 59, 1);
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
+    border-color: rgba(255, 255, 255, 0.2);
 }
 
 .card .thumb-wrap {
@@ -444,7 +447,7 @@ div[data-testid="stButton"] > button:active {
 .card .thumb-empty {
     width: 100%;
     height: 240px;
-    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+    background: linear-gradient(135deg, #1e293b, #0f172a);
 }
 
 /* Score bar */
@@ -454,7 +457,7 @@ div[data-testid="stButton"] > button:active {
     left: 0;
     height: 3px;
     z-index: 2;
-    background: linear-gradient(90deg, #93c5fd, #60a5fa);
+    background: var(--accent-gradient);
     opacity: 0.8;
 }
 
@@ -466,7 +469,7 @@ div[data-testid="stButton"] > button:active {
     font-family: var(--display);
     font-size: 18px;
     font-weight: 500;
-    color: var(--ink);
+    color: var(--charcoal);
     margin: 0 0 6px;
     line-height: 1.3;
 }
@@ -476,8 +479,8 @@ div[data-testid="stButton"] > button:active {
     font-size: 10px;
     font-weight: 500;
     letter-spacing: 0.05em;
-    color: var(--accent);
-    background: rgba(96, 165, 250, 0.1);
+    color: var(--accent-light);
+    background: rgba(139, 92, 246, 0.15);
     padding: 3px 8px;
     border-radius: 12px;
     margin-left: 8px;
@@ -533,7 +536,7 @@ div[data-testid="stButton"] > button:active {
 .pipeline .p-title {
     font-family: var(--display);
     font-size: 26px;
-    font-weight: 400;
+    font-weight: 500;
     color: var(--charcoal);
     margin: 0 0 8px;
 }
@@ -545,17 +548,17 @@ div[data-testid="stButton"] > button:active {
     margin: 0 0 40px;
 }
 .step-card {
-    background: rgba(255,255,255,0.4);
-    border: 1px solid rgba(255,255,255,0.4);
+    background: var(--silk);
+    border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 24px 16px;
     text-align: center;
     transition: all 0.3s ease;
 }
 .step-card:hover {
-    background: rgba(255,255,255,0.8);
+    background: rgba(30, 41, 59, 1);
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
 }
 .step-card .s-num {
     display: inline-flex;
@@ -563,8 +566,8 @@ div[data-testid="stButton"] > button:active {
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: var(--silk);
-    color: var(--stone);
+    background: var(--mist);
+    color: var(--white);
     border-radius: 50%;
     font-size: 14px;
     font-weight: 700;
@@ -574,15 +577,16 @@ div[data-testid="stButton"] > button:active {
     font-family: var(--display);
     font-size: 16px;
     font-weight: 500;
-    color: var(--charcoal);
+    color: var(--white);
     margin: 0 0 6px;
 }
 .step-card p {
     font-size: 12px;
-    color: var(--ash);
+    color: var(--stone);
     margin: 0;
     line-height: 1.5;
 }
+
 
 /* ════════════════════════════════════════════════════════
    FOOTER
@@ -616,13 +620,13 @@ div[data-testid="stSpinner"] {
    DETAIL VIEW — Refined
    ════════════════════════════════════════════════════════ */
 .detail-card {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(15, 23, 42, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 24px;
     padding: 48px;
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
     margin-bottom: 60px;
     animation: fadeUp 0.6s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
@@ -631,7 +635,7 @@ div[data-testid="stSpinner"] {
     font-family: var(--display);
     font-size: 36px;
     font-weight: 500;
-    color: var(--ink);
+    color: var(--white);
     margin: 0 0 16px;
     line-height: 1.2;
 }
@@ -650,17 +654,17 @@ div[data-testid="stSpinner"] {
 .product-badge {
     display: inline-block;
     padding: 4px 12px;
-    background: var(--linen);
-    color: var(--charcoal);
+    background: var(--mist);
+    color: var(--white);
     border-radius: 99px;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.02em;
-    border: 1px solid var(--silk);
+    border: 1px solid var(--glass-border);
 }
 .location-badge {
     display: inline-block;
-    color: var(--ash);
+    color: var(--accent-light);
     font-weight: 500;
     margin-right: 8px;
 }
@@ -668,11 +672,80 @@ div[data-testid="stSpinner"] {
 .detail-desc {
     font-family: var(--body);
     font-size: 16px;
-    line-height: 1.9;
-    color: var(--charcoal);
-    margin-top: 32px;
-    padding-top: 32px;
-    border-top: 1px solid var(--silk);
+    line-height: 1.8;
+    color: var(--stone);
+    margin: 32px 0 48px;
+    font-weight: 300;
+}
+
+/* --- Design Insight --- */
+.insight-section {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    padding: 32px;
+    border-radius: 16px;
+    margin: 40px 0;
+    border: 1px solid rgba(255,255,255,0.05);
+    animation: fadeIn 1s ease both;
+}
+
+.insight-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-family: var(--display);
+    font-size: 18px;
+    color: var(--white);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.insight-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.style-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--accent-gradient);
+    color: var(--white);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+.color-palette {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.color-swatch {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.advice-text {
+    font-size: 14px;
+    color: var(--stone);
+    line-height: 1.6;
+    font-style: italic;
+    position: relative;
+    padding-left: 24px;
+}
+
+.advice-text::before {
+    content: '"';
+    position: absolute;
+    left: 0;
+    top: -10px;
+    font-size: 32px;
+    color: var(--accent-glow);
 }
 
 .gallery-label {
@@ -753,7 +826,7 @@ def render_hero():
             <button class="hero-cta" onclick="document.querySelector('div[data-testid=\\'stTextInput\\']>input').focus()">
                 🔍 検索を開始
             </button>
-            <button class="hero-cta" onclick="document.querySelector('.stSpinner[style*=\\'text-align\\': center\\']').scrollIntoView({behavior: 'smooth'})">
+            <button class="hero-cta" onclick="document.querySelector('.stApp').scrollIntoView({{behavior: 'smooth'}})">
                 ⬇ 施工事例を見る
             </button>
         </div>
@@ -1127,6 +1200,53 @@ def cached_search(query: str):
     return vector_search(query, n_results=300)
 
 
+def image_search(image_file, n_results=300):
+    """画像によるベクトル検索を実行する。"""
+    from search import get_image_embedding, get_chroma_client, COLLECTION_NAME
+    from PIL import Image
+    
+    img = Image.open(image_file)
+    # 埋め込みベクトルの取得
+    query_embedding = get_image_embedding(img)
+    
+    client = get_chroma_client()
+    collection = client.get_collection(COLLECTION_NAME)
+    
+    # 最近傍検索
+    fetch_count = min(n_results * 5, collection.count())
+    results = collection.query(
+        query_embeddings=[query_embedding],
+        n_results=fetch_count,
+        include=["documents", "metadatas", "distances"],
+    )
+    
+    # 重複排除ロジック (search.py の search 関数と同様)
+    search_results = []
+    unique_cases = {}
+    if results and results["ids"] and results["ids"][0]:
+        for i, doc_id in enumerate(results["ids"][0]):
+            meta = results["metadatas"][0][i]
+            case_id = meta.get("case_id", "")
+            distance = results["distances"][0][i] if results["distances"] else 0
+            
+            if case_id not in unique_cases or distance < unique_cases[case_id]["distance"]:
+                unique_cases[case_id] = {
+                    "id": doc_id,
+                    "case_id": case_id,
+                    "project_name": meta.get("project_name", ""),
+                    "products": meta.get("products", ""),
+                    "location": meta.get("location", ""),
+                    "image_path": meta.get("image_path", ""),
+                    "description": results["documents"][0][i],
+                    "distance": distance,
+                    "url": meta.get("url", ""),
+                }
+        
+        search_results = sorted(unique_cases.values(), key=lambda x: x["distance"])[:n_results]
+        
+    return search_results
+
+
 
 @st.cache_data
 def load_case_map():
@@ -1219,6 +1339,40 @@ def render_detail_view(case_id: str):
     # Description Text
     if desc_text:
         st.markdown(f'<div class="detail-desc">{desc_text}</div>', unsafe_allow_html=True)
+
+    # --- Design Insight Section ---
+    if descriptions:
+        main_insight = descriptions[0]
+        style = main_insight.get("style", "")
+        colors = main_insight.get("colors", [])
+        advice = main_insight.get("advice", "")
+        
+        if style or colors or advice:
+            color_chips = "".join([f'<div class="color-swatch" style="background:{c}"></div>' for c in colors])
+            
+            st.markdown(f"""
+<div class="insight-section">
+    <div class="insight-header">
+        ✨ Gemini's Design Insight
+    </div>
+    <div class="insight-grid">
+        <div class="insight-col">
+            <p style="font-size:12px;color:var(--ash);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.1em;">空間スタイル</p>
+            <span class="style-tag">{style if style else "スタンダード"}</span>
+            <p style="font-size:12px;color:var(--ash);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em;">カラーパレット</p>
+            <div class="color-palette">
+                {color_chips}
+            </div>
+        </div>
+        <div class="insight-col">
+            <p style="font-size:12px;color:var(--ash);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.1em;">プロのアドバイス</p>
+            <div class="advice-text">
+                {advice if advice else "シンプルで機能的なデザインが、空間の広がりを演出しています。"}
+            </div>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
     # Close Card div
     st.markdown("</div>", unsafe_allow_html=True)
@@ -1335,6 +1489,17 @@ def main():
         st.session_state["page"] = 0
         st.session_state["search_query"] = query
     
+    # --- 画像検索 (Visual Search) UI ---
+    uploaded_file = st.file_uploader(
+        "画像をアップロードして似た雰囲気の事例を探す",
+        type=["jpg", "jpeg", "png"],
+        key="visual_search_uploader",
+        label_visibility="collapsed"
+    )
+    if uploaded_file:
+        st.info("📸 画像を解析して検索しています...")
+    # ----------------------------------
+    
     # 検索バーの下にサジェスト (類似検索時は表示しない)
     if not st.session_state["similar_query_id"]:
         render_suggestions()
@@ -1388,6 +1553,10 @@ def main():
             with st.spinner(""):
                 results = cached_search(query)
                 mode_title = f"「{query}」"
+        elif uploaded_file:
+            # 画像検索実行
+            results = image_search(uploaded_file)
+            mode_title = "アップロード画像に似た事例"
         else:
             # Query is empty: Show ALL items
             with st.spinner("一覧を読み込み中…"):
@@ -1486,8 +1655,8 @@ def main():
                                 st.rerun()
         else:
             st.markdown(
-                '<div class="empty"><h2>一致する事例が見つかりませんでした。</h2>'
-                "<p>別のキーワードや表現で試してみてください。</p></div>",
+                '<div class="empty" style="text-align:center; padding: 40px;"><h2 style="color:var(--white); font-weight:500;">一致する事例が見つかりませんでした。</h2>'
+                "<p style='color:var(--stone);'>別のキーワードや表現で試してみてください。</p></div>",
                 unsafe_allow_html=True,
             )
 
@@ -1515,7 +1684,7 @@ def render_suggestions():
 
     # 初期画面（検索未入力時）の場合は案内文を表示
     if not st.session_state.get("search_query") and not st.session_state.get("similar_query_id"):
-        st.markdown("<h3 style='text-align: center; color: var(--ash); font-size: 18px; margin-top: 32px; margin-bottom: 16px;'>💡 こんな検索はどうですか？</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='text-align: center; color: var(--ink); font-weight: 500; font-size: 18px; margin-top: 32px; margin-bottom: 16px;'>💡 こんな検索はどうですか？</h3>", unsafe_allow_html=True)
 
     if "selected_suggestion_genre" not in st.session_state:
         st.session_state["selected_suggestion_genre"] = None
