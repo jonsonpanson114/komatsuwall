@@ -62,28 +62,28 @@ st.markdown(
     --display: "Outfit", "Noto Sans JP", sans-serif;
     --body: "Outfit", "Noto Sans JP", sans-serif;
 
-    /* Sleek Dark Mode Palette */
-    --ink: #cfd8dc;       /* Light text */
-    --charcoal: #f8fafc;  /* Main text */
-    --stone: #94a3b8;     /* Muted text */
-    --ash: #64748b;       /* Darker muted */
-    --mist: #334155;      /* Border/ subtle bg */
-    --silk: #1e293b;      /* Card bg */
-    --linen: #0f172a;     /* Main bg */
-    --cream: #020617;     /* Deep bg */
+    /* Minimal Light Palette (Architectural) */
+    --ink: #0f172a;       /* Dark text */
+    --charcoal: #334155;  /* Main text */
+    --stone: #64748b;     /* Muted text */
+    --ash: #94a3b8;       /* Lighter muted */
+    --mist: #e2e8f0;      /* Border/ subtle bg */
+    --silk: #f8fafc;      /* Card bg */
+    --linen: #f1f5f9;     /* Main bg */
+    --cream: #ffffff;     /* Deep bg */
     --white: #ffffff;
     
-    /* Dark Glass Effect */
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.12);
-    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+    /* Clean Light Glass Effect */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
     --blur: blur(20px);
 
-    /* Accent — Ethereal Neon */
-    --accent: #8b5cf6; /* Violet */
-    --accent-light: #c4b5fd;
-    --accent-glow: rgba(139, 92, 246, 0.3);
-    --accent-gradient: linear-gradient(135deg, #a855f7, #3b82f6);
+    /* Accent — Architectural Blue */
+    --accent: #0369a1;    /* Deep Blue */
+    --accent-light: #e0f2fe; 
+    --accent-glow: rgba(3, 105, 161, 0.15);
+    --accent-gradient: linear-gradient(135deg, #0284c7, #0369a1);
 }
 
 /* ══════════════════════════════════════════════
@@ -159,21 +159,16 @@ st.markdown(
     margin: 0 0 28px;
     position: relative;
     z-index: 6;
-    color: var(--white);
-    background: linear-gradient(to right, #ffffff, #94a3b8);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    color: transparent;
+    color: var(--ink);
     animation: fadeUp 1.2s cubic-bezier(0.2, 1, 0.3, 1) 0.4s both;
-    text-shadow: none; /* Shadow on text-clip is tricky, rely on glow */
+    text-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 .hero-subhead {
     font-family: var(--body);
     font-size: 18px;
     font-weight: 300;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--charcoal);
     max-width: 540px;
     margin: 0 auto 24px;
     line-height: 1.7;
@@ -243,7 +238,7 @@ div[data-testid="stStatusWidget"] {
 }
 
 .stApp {
-    background: radial-gradient(circle at top center, #0f172a, #020617);
+    background: radial-gradient(circle at top center, #ffffff, #f1f5f9);
     background-attachment: fixed;
 }
 .stApp > header { background: transparent !important; }
@@ -332,17 +327,17 @@ div[data-testid="stTextInput"] > div > div > input {
     background: var(--glass-bg) !important;
     backdrop-filter: var(--blur) !important;
     -webkit-backdrop-filter: var(--blur) !important;
-    color: var(--white) !important;
+    color: var(--ink) !important;
     letter-spacing: 0.02em !important;
     transition: all 0.3s cubic-bezier(0.2, 1, 0.3, 1) !important;
     box-shadow: var(--glass-shadow) !important;
 }
 div[data-testid="stTextInput"] > div > div > input::placeholder {
-    color: var(--ash) !important;
+    color: var(--stone) !important;
     font-weight: 300 !important;
 }
 div[data-testid="stTextInput"] > div > div > input:focus {
-    background: rgba(30, 41, 59, 0.85) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
     border-color: var(--accent) !important;
     box-shadow: var(--glass-shadow),
                 0 0 0 4px var(--accent-glow) !important;
@@ -359,9 +354,9 @@ div[data-testid="stTextInput"] > label {
    ════════════════════════════════════════════════════════ */
 div[data-testid="stButton"] > button {
     font-family: var(--body) !important;
-    background: rgba(30, 41, 59, 0.5) !important;
-    color: var(--stone) !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    color: var(--charcoal) !important;
+    border: 1px solid rgba(0, 0, 0, 0.05) !important;
     border-radius: 30px !important;
     padding: 8px 20px !important;
     font-size: 13px !important;
@@ -372,9 +367,9 @@ div[data-testid="stButton"] > button {
 }
 div[data-testid="stButton"] > button:hover {
     color: var(--white) !important;
-    background: rgba(255, 255, 255, 0.1) !important;
-    border-color: var(--accent) !important;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    background: var(--charcoal) !important;
+    border-color: var(--charcoal) !important;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
     transform: translateY(-2px) !important;
 }
 div[data-testid="stButton"] > button:active {
@@ -410,22 +405,22 @@ div[data-testid="stButton"] > button:active {
    GALLERY CARDS — Glassmorphism
    ════════════════════════════════════════════════════════ */
 .card {
-    background: var(--silk);
+    background: var(--white);
     border: 1px solid var(--glass-border);
     border-radius: 20px;
     overflow: hidden;
     margin-bottom: 32px;
     cursor: default;
     position: relative;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
     animation: fadeUp 0.8s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
 .card:hover {
     transform: translateY(-8px);
-    background: rgba(30, 41, 59, 1);
-    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.5);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--white);
+    box-shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+    border-color: rgba(0, 0, 0, 0.1);
 }
 
 .card .thumb-wrap {
@@ -447,7 +442,7 @@ div[data-testid="stButton"] > button:active {
 .card .thumb-empty {
     width: 100%;
     height: 240px;
-    background: linear-gradient(135deg, #1e293b, #0f172a);
+    background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
 }
 
 /* Score bar */
@@ -548,7 +543,7 @@ div[data-testid="stButton"] > button:active {
     margin: 0 0 40px;
 }
 .step-card {
-    background: var(--silk);
+    background: rgba(255,255,255,0.8);
     border: 1px solid var(--glass-border);
     border-radius: 16px;
     padding: 24px 16px;
@@ -556,9 +551,9 @@ div[data-testid="stButton"] > button:active {
     transition: all 0.3s ease;
 }
 .step-card:hover {
-    background: rgba(30, 41, 59, 1);
+    background: rgba(255,255,255,1);
     transform: translateY(-4px);
-    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
 }
 .step-card .s-num {
     display: inline-flex;
@@ -566,8 +561,8 @@ div[data-testid="stButton"] > button:active {
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: var(--mist);
-    color: var(--white);
+    background: var(--linen);
+    color: var(--charcoal);
     border-radius: 50%;
     font-size: 14px;
     font-weight: 700;
@@ -577,12 +572,12 @@ div[data-testid="stButton"] > button:active {
     font-family: var(--display);
     font-size: 16px;
     font-weight: 500;
-    color: var(--white);
+    color: var(--charcoal);
     margin: 0 0 6px;
 }
 .step-card p {
     font-size: 12px;
-    color: var(--stone);
+    color: var(--ash);
     margin: 0;
     line-height: 1.5;
 }
@@ -620,13 +615,13 @@ div[data-testid="stSpinner"] {
    DETAIL VIEW — Refined
    ════════════════════════════════════════════════════════ */
 .detail-card {
-    background: rgba(15, 23, 42, 0.85);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--glass-border);
     border-radius: 24px;
     padding: 48px;
-    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.05);
     margin-bottom: 60px;
     animation: fadeUp 0.6s cubic-bezier(0.2, 1, 0.3, 1) both;
 }
@@ -635,7 +630,7 @@ div[data-testid="stSpinner"] {
     font-family: var(--display);
     font-size: 36px;
     font-weight: 500;
-    color: var(--white);
+    color: var(--ink);
     margin: 0 0 16px;
     line-height: 1.2;
 }
@@ -654,17 +649,17 @@ div[data-testid="stSpinner"] {
 .product-badge {
     display: inline-block;
     padding: 4px 12px;
-    background: var(--mist);
-    color: var(--white);
+    background: var(--linen);
+    color: var(--charcoal);
     border-radius: 99px;
     font-size: 12px;
     font-weight: 500;
     letter-spacing: 0.02em;
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--mist);
 }
 .location-badge {
     display: inline-block;
-    color: var(--accent-light);
+    color: var(--ash);
     font-weight: 500;
     margin-right: 8px;
 }
@@ -673,18 +668,18 @@ div[data-testid="stSpinner"] {
     font-family: var(--body);
     font-size: 16px;
     line-height: 1.8;
-    color: var(--stone);
+    color: var(--charcoal);
     margin: 32px 0 48px;
     font-weight: 300;
 }
 
 /* --- Design Insight --- */
 .insight-section {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
     padding: 32px;
     border-radius: 16px;
     margin: 40px 0;
-    border: 1px solid rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
     animation: fadeIn 1s ease both;
 }
 
@@ -695,7 +690,7 @@ div[data-testid="stSpinner"] {
     margin-bottom: 20px;
     font-family: var(--display);
     font-size: 18px;
-    color: var(--white);
+    color: var(--ink);
     letter-spacing: 0.1em;
     text-transform: uppercase;
 }
@@ -709,7 +704,7 @@ div[data-testid="stSpinner"] {
 .style-tag {
     display: inline-block;
     padding: 6px 16px;
-    background: var(--accent-gradient);
+    background: var(--charcoal);
     color: var(--white);
     border-radius: 4px;
     font-size: 14px;
@@ -727,12 +722,12 @@ div[data-testid="stSpinner"] {
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(0,0,0,0.1);
 }
 
 .advice-text {
     font-size: 14px;
-    color: var(--stone);
+    color: var(--charcoal);
     line-height: 1.6;
     font-style: italic;
     position: relative;
@@ -745,7 +740,7 @@ div[data-testid="stSpinner"] {
     left: 0;
     top: -10px;
     font-size: 32px;
-    color: var(--accent-glow);
+    color: rgba(0,0,0,0.1);
 }
 
 .gallery-label {
