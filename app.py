@@ -113,11 +113,11 @@ st.markdown(
     z-index: 1;
     background: linear-gradient(
         to bottom,
-        rgba(8, 8, 8, 0.50) 0%,
-        rgba(8, 8, 8, 0.35) 35%,
-        rgba(8, 8, 8, 0.30) 60%,
-        rgba(8, 8, 8, 0.50) 75%,
-        rgba(8, 8, 8, 0.70) 100%
+        rgba(255, 255, 255, 0.40) 0%,
+        rgba(255, 255, 255, 0.25) 35%,
+        rgba(255, 255, 255, 0.20) 60%,
+        rgba(255, 255, 255, 0.40) 75%,
+        rgba(255, 255, 255, 0.85) 100%
     );
 }
 
@@ -132,7 +132,7 @@ st.markdown(
     font-weight: 500;
     letter-spacing: 0.25em;
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--stone);
     margin: 0 0 32px;
     position: relative;
     z-index: 6;
@@ -147,7 +147,7 @@ st.markdown(
     transform: translateX(-50%);
     width: 40px;
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4));
+    background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.15));
 }
 
 .hero-headline {
@@ -192,8 +192,8 @@ st.markdown(
     align-items: center;
     gap: 10px;
     padding: 14px 28px;
-    background: var(--accent-gradient);
-    border-radius: 50px;
+    background: var(--ink);
+    border-radius: 4px;
     border: none;
     color: var(--white);
     font-family: var(--body);
@@ -201,14 +201,13 @@ st.markdown(
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s ease;
-    animation: pulse 3s ease-in-out infinite;
 }
 
 .hero-cta:hover {
-    background: var(--charcoal);
+    background: var(--accent);
     color: var(--white);
     transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes slowDrift {
@@ -258,57 +257,7 @@ div[data-testid="stStatusWidget"] {
     to   { opacity: 1; }
 }
 
-/* ════════════════════════════════════════════════════════
-   HERO — Ethereal, Air, Light
-   ════════════════════════════════════════════════════════ */
-.hero {
-    padding: 160px 40px 100px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    background: transparent;
-}
 
-.hero-overline {
-    font-family: var(--body);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--ash);
-    margin: 0 0 24px;
-    position: relative;
-    z-index: 5;
-    animation: fadeUp 1.0s cubic-bezier(0.2, 1, 0.3, 1) 0.1s both;
-}
-
-.hero-headline {
-    font-family: var(--display);
-    font-size: 80px;
-    font-weight: 400; /* Lighter weight for elegance */
-    letter-spacing: -0.01em;
-    line-height: 1.1;
-    margin: 0 0 24px;
-    position: relative;
-    z-index: 5;
-    color: var(--charcoal);
-    animation: fadeUp 1.0s cubic-bezier(0.2, 1, 0.3, 1) 0.2s both;
-    text-shadow: 0 10px 30px rgba(100,116,139,0.1);
-}
-
-.hero-subhead {
-    font-family: var(--body);
-    font-size: 16px;
-    font-weight: 400;
-    color: var(--stone);
-    max-width: 500px;
-    margin: 0 auto;
-    line-height: 1.8;
-    letter-spacing: 0.05em;
-    position: relative;
-    z-index: 5;
-    animation: fadeUp 1.0s cubic-bezier(0.2, 1, 0.3, 1) 0.3s both;
-}
 
 /* ════════════════════════════════════════════════════════
    SEARCH — Floating Glass Capsule
