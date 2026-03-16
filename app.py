@@ -722,25 +722,26 @@ def truncate(text: str, n: int = 140) -> str:
 
 
 def render_hero():
-    """Architectural Monograph: Full-bleed background with elegant typography"""
+    """Architectural Portfolio: High-end layout with technical precision"""
     b64 = hero_img_b64(HERO_IMAGE)
     bg_style = (f'style="background-image:url(data:image/jpeg;base64,{b64})"' if b64 else "")
 
     st.markdown(f"""
 <div class="hero">
     <div class="hero-bg" {bg_style}></div>
-    <div class="hero-overlay"></div>
     <div class="hero-content">
-        <p class="hero-overline">Komatsu Wall Industry</p>
-        <h1 class="hero-headline">空間を、直感で見つける。</h1>
-        <p class="hero-subhead">製品名でも、雰囲気でも。<br>
-        イメージするだけで、理想の施工事例に出会えます。</p>
+        <p class="hero-overline">Specifying Excellence / Komatsu Wall</p>
+        <h1 class="hero-headline">空間を、<br>直感で見つける。</h1>
+        <p class="hero-subhead">
+            洗練された建築と、確かな技術が融合する場所。<br>
+            イメージの断片から、理想の空間設計を導き出します。
+        </p>
         <div class="hero-actions">
             <button class="hero-cta" onclick="document.querySelector('div[data-testid=\\'stTextInput\\']>input').focus()">
-                🔍 検索を開始
+                BEGIN SEARCH
             </button>
-            <button class="hero-cta" onclick="document.querySelector('.stApp').scrollIntoView({{behavior: 'smooth'}})">
-                ⬇ 施工事例を見る
+            <button class="hero-cta" style="background:transparent; color:var(--ink);" onclick="document.querySelector('.stApp').scrollIntoView({{behavior: 'smooth'}})">
+                EXPLORE PROJECTS
             </button>
         </div>
     </div>
@@ -854,7 +855,7 @@ def render_results_incremental(results: list[dict], query: str):
     # ヘッダー
     st.markdown(f"""
 <div class="results-bar">
-<span class="r-count">{display_limit}件表示 / 合計{len(results)}件</span>
+<span class="r-count">Viewing {display_limit} of {len(results)} projects</span>
 <span class="r-query">{query}</span>
 </div>
 """,
@@ -894,7 +895,7 @@ def render_results_incremental(results: list[dict], query: str):
 def render_results(results: list[dict], query: str):
     st.markdown(f"""
 <div class="results-bar">
-<span class="r-count">{len(results)}件の施工事例</span>
+<span class="r-count">SPECIMEN INDEX / {len(results)} TOTAL</span>
 <span class="r-query">{query}</span>
 </div>
 """,
