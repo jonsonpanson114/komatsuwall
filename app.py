@@ -174,13 +174,14 @@ st.markdown(
     display: inline-flex;
     align-items: center;
     padding: 12px 24px;
-    background: var(--ink);
-    border: 1px solid var(--ink);
-    color: var(--white);
-    font-family: var(--body);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.1em;
+    background: var(--ink) !important;
+    border: 1px solid var(--ink) !important;
+    border-radius: 0px !important; /* Sharp corners */
+    color: var(--white) !important;
+    font-family: var(--body) !important;
+    font-size: 13px !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.1em !important;
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -517,6 +518,12 @@ div[data-testid="stButton"] > button:active {
     text-transform: uppercase;
     letter-spacing: 0.2em;
     color: var(--ash);
+}
+.theme-ver {
+    font-family: var(--mono);
+    font-size: 8px;
+    color: var(--mist);
+    margin-top: 8px;
 }
 
 /* ════════════════════════════════════════════════════════
@@ -986,6 +993,7 @@ def render_footer():
     st.markdown("""
 <div class="site-footer">
 <p>Komatsu Wall &mdash; Gemini Embedding &amp; ChromaDB</p>
+<div class="theme-ver">TECHNICAL PORTFOLIO V1.2 (STRICT)</div>
 </div>
 """,
         unsafe_allow_html=True,
